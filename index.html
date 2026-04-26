@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <!-- ВСТАВЬТЕ СВОЙ BASE64 ЗДЕСЬ -->
-  <link rel="icon" type="image/png" href="data:image/png;base64,<>
+  <link rel="icon" type="image/png" href="data:image/png;base64,<!-- ВСТАВЬТЕ СВОЙ BASE64 ЗДЕСЬ -->">
   <title>BordGram • Мессенджер</title>
   <style>
     * {
@@ -21,8 +21,6 @@
       --danger: #FF4D5A;
       --success: #2ECC71;
       --warning: #F39C12;
-      --google-bg: #FFFFFF;
-      --google-text: #444444;
     }
 
     body {
@@ -122,7 +120,7 @@
       background: var(--surface-light);
       border-radius: 3rem;
       padding: 0.4rem;
-      margin-bottom: 1.5rem;
+      margin-bottom: 2rem;
       gap: 0.5rem;
     }
 
@@ -183,48 +181,6 @@
 
     .btn-primary:hover {
       filter: brightness(1.1);
-    }
-
-    .btn-google {
-      background: var(--google-bg);
-      color: var(--google-text);
-      border: 1px solid #ddd;
-      padding: 0.9rem;
-      border-radius: 2rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: 0.2s;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.8rem;
-      font-size: 1rem;
-      margin-top: 0.5rem;
-    }
-
-    .btn-google:hover {
-      background: #f5f5f5;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    }
-
-    .btn-google img {
-      width: 20px;
-      height: 20px;
-    }
-
-    .divider {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      color: var(--text-secondary);
-      font-size: 0.9rem;
-    }
-
-    .divider::before, .divider::after {
-      content: '';
-      flex: 1;
-      height: 1px;
-      background: var(--border);
     }
 
     .error-message {
@@ -541,11 +497,6 @@
         <input type="text" id="loginUsername" placeholder="Никнейм" required>
         <input type="password" id="loginPassword" placeholder="Пароль" required>
         <button type="submit" class="btn-primary">Войти</button>
-        <div class="divider">или</div>
-        <button type="button" id="googleLoginBtn" class="btn-google">
-          <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGcgdHJhbnNmb3JtPSJtYXRyaXgoMSwgMCwgMCwgMSwgMCwgMCkiPjxwYXRoIGQ9Ik0yMi41NiAxMi4yNWMwLS43My0uMDYtMS40My0uMTgtMi4xMkgxMnY0LjI2aDUuOTJjLS4yNiAxLjM3LTEuMDQgMi41My0yLjIxIDMuMzF2Mi43NmgzLjU3YzIuMDgtMS45MiAzLjI4LTQuNzQgMy4yOC04LjIxeiIgZmlsbD0iIzQyODVGNCIvPjxwYXRoIGQ9Ik0xMiAyM2MzLjI0IDAgNS45NS0xLjA4IDcuOTMtMi45MWwtMy41Ny0yLjc2Yy0xLjA4LjczLTIuNDYgMS4xNi00LjM2IDEuMTYtMy4zNSAwLTYuMTktMi4yNy03LjIxLTUuMzJIMy4yMnYyLjg1YzEuOTggMy45MyA2LjA0IDYuOTggMTAuNzggNi45OHoiIGZpbGw9IiMzNEE4NTMiLz48cGF0aCBkPSJNNC43OSAxNC4xN2MtLjI1LS43My0uMzktMS41LS4zOS0yLjI5cy4xNC0xLjU2LjM5LTIuMjlWNi43NEgzLjIyYy0uOCAxLjYtMS4yNiAzLjQtMS4yNiA1LjI2czEuNDYgMy42NiAyLjI2IDUuMjZsMi41Ny0yLjA5eiIgZmlsbD0iI0ZCQkMwNSIvPjxwYXRoIGQ9Ik0xMiA0Ljc1YzEuNzcgMCAzLjM1LjYxIDQuNiAxLjhsMy40Mi0zLjQyQzE3Ljk1IDEuMTggMTUuMjQgMCAxMiAwIDcuMjYgMCAyLjIgMi4wNS4yMiA1Ljk4bDIuNTcgMi4wOWMxLjAyLTMuMDUgMy44Ni01LjMyIDcuMjEtNS4zMnoiIGZpbGw9IiNFQTQzMzUiLz48L2c+PC9zdmc+" alt="Google">
-          Войти через Google
-        </button>
         <div id="loginError" class="error-message"></div>
       </form>
       <form id="registerForm" class="auth-form">
@@ -555,11 +506,6 @@
         <textarea id="regBio" placeholder="О себе" rows="2"></textarea>
         <input type="file" id="regAvatar" accept="image/*">
         <button type="submit" class="btn-primary">Создать аккаунт</button>
-        <div class="divider">или</div>
-        <button type="button" id="googleRegisterBtn" class="btn-google">
-          <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGcgdHJhbnNmb3JtPSJtYXRyaXgoMSwgMCwgMCwgMSwgMCwgMCkiPjxwYXRoIGQ9Ik0yMi41NiAxMi4yNWMwLS43My0uMDYtMS40My0uMTgtMi4xMkgxMnY0LjI2aDUuOTJjLS4yNiAxLjM3LTEuMDQgMi41My0yLjIxIDMuMzF2Mi43NmgzLjU3YzIuMDgtMS45MiAzLjI4LTQuNzQgMy4yOC04LjIxeiIgZmlsbD0iIzQyODVGNCIvPjxwYXRoIGQ9Ik0xMiAyM2MzLjI0IDAgNS45NS0xLjA4IDcuOTMtMi45MWwtMy41Ny0yLjc2Yy0xLjA4LjczLTIuNDYgMS4xNi00LjM2IDEuMTYtMy4zNSAwLTYuMTktMi4yNy03LjIxLTUuMzJIMy4yMnYyLjg1YzEuOTggMy45MyA2LjA0IDYuOTggMTAuNzggNi45OHoiIGZpbGw9IiMzNEE4NTMiLz48cGF0aCBkPSJNNC43OSAxNC4xN2MtLjI1LS43My0uMzktMS41LS4zOS0yLjI5cy4xNC0xLjU2LjM5LTIuMjlWNi43NEgzLjIyYy0uOCAxLjYtMS4yNiAzLjQtMS4yNiA1LjI2czEuNDYgMy42NiAyLjI2IDUuMjZsMi41Ny0yLjA5eiIgZmlsbD0iI0ZCQkMwNSIvPjxwYXRoIGQ9Ik0xMiA0Ljc1YzEuNzcgMCAzLjM1LjYxIDQuNiAxLjhsMy40Mi0zLjQyQzE3Ljk1IDEuMTggMTUuMjQgMCAxMiAwIDcuMjYgMCAyLjIgMi4wNS4yMiA1Ljk4bDIuNTcgMi4wOWMxLjAyLTMuMDUgMy44Ni01LjMyIDcuMjEtNS4zMnoiIGZpbGw9IiNFQTQzMzUiLz48L2c+PC9zdmc+" alt="Google">
-          Зарегистрироваться через Google
-        </button>
         <div id="regError" class="error-message"></div>
       </form>
     </div>
@@ -674,7 +620,7 @@
 
   <script type="module">
     import { initializeApp } from "firebase/app";
-    import { getAuth, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword, updateProfile, onAuthStateChanged, signOut, updateEmail, updatePassword } from "firebase/auth";
+    import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile, onAuthStateChanged, signOut, updateEmail, updatePassword } from "firebase/auth";
     import { getFirestore, collection, doc, setDoc, getDoc, getDocs, updateDoc, deleteDoc, query, where, orderBy, onSnapshot, addDoc, serverTimestamp, limit } from "firebase/firestore";
 
     const firebaseConfig = {
@@ -689,7 +635,6 @@
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
-    const googleProvider = new GoogleAuthProvider();
 
     const CREATOR_USERNAME = "BordGram";
     const CREATOR_PASSWORD = "09823065890dD";
@@ -739,8 +684,10 @@
       
       if (Math.abs(diff) > SWIPE_THRESHOLD) {
         if (diff > 0 && !sidebar.classList.contains('open')) {
+          // Свайп вправо - открыть
           sidebar.classList.add('open');
         } else if (diff < 0 && sidebar.classList.contains('open')) {
+          // Свайп влево - закрыть
           sidebar.classList.remove('open');
         }
       }
@@ -793,44 +740,6 @@
       }
     }
 
-    // Google Sign-In
-    async function signInWithGoogle() {
-      try {
-        const result = await signInWithPopup(auth, googleProvider);
-        const user = result.user;
-        
-        const userDocRef = doc(db, 'users', user.uid);
-        const userDocSnap = await getDoc(userDocRef);
-        
-        if (!userDocSnap.exists()) {
-          const badge = (user.displayName === CREATOR_USERNAME) ? 'creator' : 'user';
-          await setDoc(userDocRef, {
-            uid: user.uid,
-            username: user.displayName || user.email?.split('@')[0] || 'user',
-            email: user.email || '',
-            avatar: user.photoURL || '',
-            bio: '',
-            badge: badge,
-            online: true,
-            banned: false,
-            lastSeen: serverTimestamp(),
-            createdAt: serverTimestamp()
-          });
-        } else {
-          await updateDoc(userDocRef, { online: true, lastSeen: serverTimestamp() });
-        }
-        
-        return true;
-      } catch (error) {
-        console.error('Google sign-in error:', error);
-        if (error.code !== 'auth/popup-closed-by-user') {
-          document.getElementById('loginError').textContent = '❌ ' + error.message;
-          document.getElementById('regError').textContent = '❌ ' + error.message;
-        }
-        return false;
-      }
-    }
-
     const avatarColors = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7', '#DDA0DD', '#98D8C8', '#F7DC6F', '#BB8FCE', '#85C1E2'];
 
     function getAvatarColor(name) {
@@ -847,11 +756,10 @@
     function renderAvatar(container, userData) {
       if (!container || !userData) return;
       container.innerHTML = '';
-      if (userData.avatar && (userData.avatar.startsWith('data:image') || userData.avatar.startsWith('http'))) {
+      if (userData.avatar && userData.avatar.startsWith('data:image')) {
         const img = document.createElement('img');
         img.src = userData.avatar;
         img.alt = userData.username || '';
-        img.referrerPolicy = 'no-referrer';
         container.appendChild(img);
       } else {
         container.textContent = getInitial(userData.username);
@@ -1038,7 +946,7 @@
         const userDocRef = doc(db, 'users', user.uid);
         const userDocSnap = await getDoc(userDocRef);
         if (!userDocSnap.exists()) {
-          currentUser = { uid: user.uid, username: user.displayName || user.email?.split('@')[0] || 'user', email: user.email || '', avatar: user.photoURL || '', bio: '', badge: (user.displayName === CREATOR_USERNAME ? 'creator' : 'user'), online: true, banned: false };
+          currentUser = { uid: user.uid, username: user.displayName || 'user', email: user.email, avatar: '', bio: '', badge: (user.displayName === CREATOR_USERNAME ? 'creator' : 'user'), online: true, banned: false };
           await setDoc(userDocRef, { ...currentUser, lastSeen: serverTimestamp(), createdAt: serverTimestamp() });
         } else currentUser = { uid: user.uid, ...userDocSnap.data() };
         if (currentUser.banned) { await signOut(auth); alert('⛔ Вы забанены'); return; }
@@ -1165,7 +1073,6 @@
       document.getElementById('messageInput').value = '';
     }
 
-    // Event Listeners
     document.getElementById('sendBtn').addEventListener('click', sendContent);
     document.getElementById('messageInput').addEventListener('keypress', (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendContent(); } });
     document.getElementById('attachBtn').addEventListener('click', () => document.getElementById('imageInput').click());
@@ -1225,20 +1132,12 @@
       document.getElementById('messagesContainer').innerHTML = '<div style="text-align:center; margin-top:30%;"><h2>💬 BordGram</h2><p>Выберите диалог</p></div>';
       document.getElementById('userInfoPanel').classList.remove('active');
     });
-
-    // Google Auth Buttons
-    document.getElementById('googleLoginBtn').addEventListener('click', signInWithGoogle);
-    document.getElementById('googleRegisterBtn').addEventListener('click', signInWithGoogle);
-
     document.querySelectorAll('.tab-btn').forEach(b => b.addEventListener('click', () => {
       document.querySelectorAll('.tab-btn').forEach(x => x.classList.remove('active'));
       b.classList.add('active');
       document.getElementById('loginForm').classList.toggle('active', b.dataset.tab === 'login');
       document.getElementById('registerForm').classList.toggle('active', b.dataset.tab === 'register');
-      document.getElementById('loginError').textContent = '';
-      document.getElementById('regError').textContent = '';
     }));
-
     document.getElementById('loginForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       const username = document.getElementById('loginUsername').value.trim();
@@ -1251,7 +1150,6 @@
         await signInWithEmailAndPassword(auth, u.email, password);
       } catch(e) { document.getElementById('loginError').textContent = '❌ ' + e.message; }
     });
-
     document.getElementById('registerForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       const username = document.getElementById('regUsername').value.trim();
@@ -1271,7 +1169,6 @@
         document.getElementById('regError').textContent = '✅ Успешно! Войдите.';
       } catch(e) { document.getElementById('regError').textContent = '❌ ' + e.message; }
     });
-
     document.getElementById('adminSearchUser')?.addEventListener('input', (e) => loadAdminUsers(e.target.value));
     ['settingsModal', 'imagePreviewModal'].forEach(id => document.getElementById(id).addEventListener('click', (e) => { if (e.target === document.getElementById(id)) document.getElementById(id).classList.remove('active'); }));
   </script>
