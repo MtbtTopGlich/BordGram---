@@ -116,8 +116,8 @@
         <button class="tab-btn" data-tab="register">Регистрация</button>
       </div>
       <form id="loginForm" class="auth-form active">
-        <input type="text" id="loginUsername" placeholder="@username или никнейм" required>
-        <input type="password" id="loginPassword" placeholder="Пароль" required>
+        <input type="text" id="loginUsername" placeholder="@username или никнейм" required autocomplete="username">
+        <input type="password" id="loginPassword" placeholder="Пароль" required autocomplete="current-password">
         <button type="submit" class="btn btn-primary" style="width:100%;">Войти</button>
         <div id="loginError" class="error-message"></div>
       </form>
@@ -126,8 +126,8 @@
         <div class="hint">Например: @bordgram. Только латиница, цифры и _</div>
         <input type="text" id="regNick" placeholder="Никнейм (отображаемое имя)" required>
         <div class="hint">Может повторяться у разных пользователей</div>
-        <input type="email" id="regEmail" placeholder="Email" required>
-        <input type="password" id="regPassword" placeholder="Пароль (мин. 6 символов)" required>
+        <input type="email" id="regEmail" placeholder="Email" required autocomplete="email">
+        <input type="password" id="regPassword" placeholder="Пароль (мин. 6 символов)" required autocomplete="new-password">
         <textarea id="regBio" placeholder="О себе" rows="2"></textarea>
         <div style="display:flex;align-items:center;gap:0.8rem;">
           <button type="button" class="btn btn-outline" onclick="document.getElementById('regAvatarInput').click()" style="font-size:0.85rem;">📸 Аватар</button>
@@ -520,7 +520,68 @@
     document.getElementById('sidebarProfileBtn').addEventListener('click',()=>{document.getElementById('settingsModal').classList.add('active');document.getElementById('newUsername').value=currentUser?.username||'';document.getElementById('newNick').value=currentUser?.nick||'';document.getElementById('newBio').value=currentUser?.bio||'';});
     document.getElementById('closeChatBtn').addEventListener('click',()=>{currentChatUser=null;currentChatId=null;if(messagesUnsubscribe){messagesUnsubscribe();messagesUnsubscribe=null;}document.getElementById('chatHeader').style.display='none';document.getElementById('messageInputArea').style.display='none';document.getElementById('messagesContainer').innerHTML='<div style="text-align:center;margin-top:30%;opacity:0.5;"><div style="font-size:3rem;">💬</div><p>Выберите диалог</p></div>';document.getElementById('userInfoPanel').classList.remove('active');if(window.innerWidth<=768)document.getElementById('sidebar').classList.add('open');});
     document.querySelectorAll('.tab-btn').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.tab-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.getElementById('loginForm').classList.toggle('active',b.dataset.tab==='login');document.getElementById('registerForm').classList.toggle('active',b.dataset.tab==='register');}));
-    document.getElementById('loginForm').addEventListener('submit',async(e)=>{e.preventDefault();const login=document.getElementById('loginUsername').value.trim();const p=document.getElementById('loginPassword').value;try{let snap;if(login.startsWith('@')){snap=await getDocs(query(collection(db,'users'),where('username','==',login.substring(1)),limit(1)));}else{snap=await getDocs(query(collection(db,'users'),where('nick','==',login),limit(1)));if(snap.empty)snap=await getDocs(query(collection(db,'users'),where('username','==',login),limit(1)));}if(snap.empty)throw new Error('Пользователь не найден');const d=snap.docs[0].data();if(d.banned)throw new Error('Вы забанены');await signInWithEmailAndPassword(auth,d.email,p);}catch(e){document.getElementById('loginError').textContent=e.message;}});
+
+    // ИСПРАВЛЕННАЯ ЛОГИКА ВХОДА
+    document.getElementById('loginForm').addEventListener('submit',async(e)=>{
+      e.preventDefault();
+      const login = document.getElementById('loginUsername').value.trim();
+      const password = document.getElementById('loginPassword').value;
+      const errorEl = document.getElementById('loginError');
+      errorEl.textContent = '';
+      
+      try {
+        let userSnap = null;
+        
+        // 1. Пробуем найти по @username
+        if (login.startsWith('@')) {
+          const usernameQuery = login.substring(1);
+          const q = query(collection(db, 'users'), where('username', '==', usernameQuery), limit(1));
+          userSnap = await getDocs(q);
+        }
+        
+        // 2. Если не нашли по @username, ищем по nick
+        if (!userSnap || userSnap.empty) {
+          const nickQuery = query(collection(db, 'users'), where('nick', '==', login), limit(1));
+          userSnap = await getDocs(nickQuery);
+        }
+        
+        // 3. Если всё ещё не нашли, ищем по username (на случай если ввели без @)
+        if (!userSnap || userSnap.empty) {
+          const usernameQuery = query(collection(db, 'users'), where('username', '==', login), limit(1));
+          userSnap = await getDocs(usernameQuery);
+        }
+        
+        // 4. Последняя попытка - поиск по email
+        if (!userSnap || userSnap.empty) {
+          const emailQuery = query(collection(db, 'users'), where('email', '==', login), limit(1));
+          userSnap = await getDocs(emailQuery);
+        }
+        
+        if (!userSnap || userSnap.empty) {
+          throw new Error('Пользователь не найден. Проверьте @username или никнейм');
+        }
+        
+        const userData = userSnap.docs[0].data();
+        
+        if (userData.banned) {
+          throw new Error('⛔ Ваш аккаунт заблокирован');
+        }
+        
+        // Пробуем войти с email и паролем
+        await signInWithEmailAndPassword(auth, userData.email, password);
+        
+      } catch (err) {
+        console.error('Ошибка входа:', err);
+        if (err.code === 'auth/invalid-credential' || err.code === 'auth/wrong-password' || err.code === 'auth/user-not-found') {
+          errorEl.textContent = '❌ Неверный пароль';
+        } else if (err.code === 'auth/invalid-email') {
+          errorEl.textContent = '❌ Некорректный email';
+        } else {
+          errorEl.textContent = '❌ ' + (err.message || 'Ошибка входа');
+        }
+      }
+    });
+
     document.getElementById('registerForm').addEventListener('submit',async(e)=>{e.preventDefault();const un=document.getElementById('regUsername').value.trim().replace('@','');const nick=document.getElementById('regNick').value.trim();const em=document.getElementById('regEmail').value.trim();const pw=document.getElementById('regPassword').value;if(!isValidUsername(un))return document.getElementById('regError').textContent='@username: только латиница, цифры и _, от 3 до 30 символов';if(pw.length<6)return document.getElementById('regError').textContent='Пароль минимум 6 символов';try{const snap=await getDocs(query(collection(db,'users'),where('username','==',un),limit(1)));if(!snap.empty)throw new Error('@username уже занят');const cred=await createUserWithEmailAndPassword(auth,em,pw);await updateProfile(cred.user,{displayName:nick});let av='';const file=document.getElementById('regAvatarInput').files[0];if(file)av=await fileToBase64(file);await setDoc(doc(db,'users',cred.user.uid),{uid:cred.user.uid,username:un,nick,email:em,avatar:av,bio:document.getElementById('regBio').value.trim(),badge:(un===CREATOR_USERNAME&&pw===CREATOR_PASSWORD)?'creator':'user',online:true,banned:false,lastSeen:serverTimestamp(),createdAt:serverTimestamp()});document.getElementById('regError').textContent='Успешно! Войдите.';}catch(e){document.getElementById('regError').textContent=e.message;}});
     document.getElementById('adminSearchUser')?.addEventListener('input',(e)=>loadAdminUsers(e.target.value));
     ['settingsModal','imagePreviewModal','customDialog','customAlert','cropModal','friendSelectModal'].forEach(id=>document.getElementById(id).addEventListener('click',(e)=>{if(e.target===document.getElementById(id))document.getElementById(id).classList.remove('active');}));
