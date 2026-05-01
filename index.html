@@ -231,6 +231,9 @@
       <input type="text" id="newUsername" placeholder="@username">
       <input type="text" id="newNick" placeholder="Никнейм">
       <textarea id="newBio" rows="2" placeholder="О себе"></textarea>
+      <label style="font-size:0.85rem;display:block;margin-bottom:0.3rem;">Фото профиля:</label>
+      <button type="button" class="btn btn-outline" onclick="document.getElementById('changeAvatarInput').click()" style="width:100%;margin-bottom:0.7rem;">📸 Изменить аватарку</button>
+      <input type="file" id="changeAvatarInput" accept="image/*" class="file-input-hidden">
       <input type="email" id="newEmail" placeholder="Email">
       <input type="password" id="newPassword" placeholder="Новый пароль">
       <button class="btn btn-primary" id="updateProfileBtn" style="width:100%;">Сохранить</button>
@@ -268,7 +271,7 @@
     const googleProvider = new GoogleAuthProvider();
 
     const CREATOR_USERNAME = "bordgram", CREATOR_PASSWORD = "09823065890dD", MAX_MESSAGES = 146;
-    let currentUser = null, currentChatData = null, currentChatId = null, messagesUnsubscribe = null, selectedMembers = new Set(), chatsUnsubscribe = null, selectedMessageId = null, pendingFile = null;
+    let currentUser = null, currentChatData = null, currentChatId = null, messagesUnsubscribe = null, selectedMembers = new Set(), chatsUnsubscribe = null, pendingFile = null;
 
     const avatarColors = ['#FF6B6B','#4ECDC4','#45B7D1','#96CEB4','#FFEAA7','#DDA0DD','#98D8C8','#F7DC6F','#BB8FCE','#85C1E2'];
     function getAvatarColor(name) { if(!name) return avatarColors[0]; let hash=0; for(let i=0;i<name.length;i++) hash=name.charCodeAt(i)+((hash<<5)-hash); return avatarColors[Math.abs(hash)%avatarColors.length]; }
@@ -287,8 +290,7 @@
 
     async function showFriendSelect(title, callback) {
       document.getElementById('friendSelectTitle').textContent = title;
-      const list = document.getElementById('friendSelectList');
-      list.innerHTML = '<div class="spinner"></div>';
+      const list = document.getElementById('friendSelectList'); list.innerHTML = '<div class="spinner"></div>';
       document.getElementById('friendSelectModal').classList.add('active');
       try {
         const chatsSnap = await getDocs(query(collection(db,'chats'), where('participants','array-contains',currentUser.uid)));
@@ -296,8 +298,7 @@
         chatsSnap.forEach(d => { if(d.data().type !== 'group') { d.data().participants.forEach(p => { if(p !== currentUser.uid) friendIds.add(p); }); } });
         list.innerHTML = '';
         for(const fid of friendIds) {
-          const ud = (await getDoc(doc(db,'users',fid))).data();
-          if(!ud || ud.banned) continue;
+          const ud = (await getDoc(doc(db,'users',fid))).data(); if(!ud||ud.banned) continue;
           const item = document.createElement('div'); item.className = 'friend-list-item';
           const av = document.createElement('div'); av.className = 'avatar'; renderAvatar(av, ud); item.appendChild(av);
           item.innerHTML += `<span>${ud.nick||ud.username}</span>`;
@@ -309,9 +310,7 @@
     document.getElementById('friendSelectCancel').addEventListener('click', () => document.getElementById('friendSelectModal').classList.remove('active'));
 
     function showContextMenu(e, message) {
-      const menu = document.getElementById('contextMenu');
-      menu.innerHTML = '';
-      selectedMessageId = message.id;
+      const menu = document.getElementById('contextMenu'); menu.innerHTML = ''; selectedMessageId = message.id;
       if (message.senderId === currentUser.uid) {
         const editItem = document.createElement('div'); editItem.className = 'context-menu-item'; editItem.textContent = '✏️ Редактировать';
         editItem.onclick = () => { editMessage(message); hideContextMenu(); }; menu.appendChild(editItem);
@@ -323,30 +322,17 @@
     }
     function hideContextMenu() { document.getElementById('contextMenu').style.display = 'none'; }
 
-    async function editMessage(message) {
-      const newText = await showPrompt('Редактировать','Новый текст:',message.text||'');
-      if(newText !== null && newText !== message.text) await updateDoc(doc(db,'messages',currentChatId,'messages',message.id), {text: newText});
-    }
+    async function editMessage(message) { const newText = await showPrompt('Редактировать','Новый текст:',message.text||''); if(newText !== null && newText !== message.text) await updateDoc(doc(db,'messages',currentChatId,'messages',message.id), {text: newText}); }
     async function deleteMessage(messageId) { if(await showConfirm('Удалить','Вы уверены?')) await deleteDoc(doc(db,'messages',currentChatId,'messages',messageId)); }
 
-    // Предпросмотр файла
-    function showFilePreview(file) {
-      pendingFile = file;
-      const preview = document.getElementById('filePreview');
-      preview.style.display = 'flex';
-      preview.innerHTML = `<div class="send-file-preview"><span>${getFileIcon(file.name)} ${file.name}</span><span class="remove-file" onclick="document.getElementById('fileInput').value='';document.getElementById('filePreview').style.display='none';pendingFile=null;">✕</span></div>`;
-    }
+    function showFilePreview(file) { pendingFile = file; const preview = document.getElementById('filePreview'); preview.style.display = 'flex'; preview.innerHTML = `<div class="send-file-preview"><span>${getFileIcon(file.name)} ${file.name}</span><span class="remove-file" onclick="document.getElementById('fileInput').value='';document.getElementById('filePreview').style.display='none';pendingFile=null;">✕</span></div>`; }
 
     document.getElementById('attachBtn').addEventListener('click', () => document.getElementById('fileInput').click());
-    document.getElementById('fileInput').addEventListener('change', (e) => {
-      const file = e.target.files[0];
-      if (file) showFilePreview(file);
-    });
+    document.getElementById('fileInput').addEventListener('change', (e) => { const file = e.target.files[0]; if (file) showFilePreview(file); });
 
     onAuthStateChanged(auth, async (user) => {
       if (user) {
-        const ref = doc(db, 'users', user.uid);
-        let snap = await getDoc(ref);
+        const ref = doc(db, 'users', user.uid); let snap = await getDoc(ref);
         if (!snap.exists()) {
           const newUser = { uid: user.uid, username: (user.email?.split('@')[0]||'user').toLowerCase().replace(/[^a-z0-9_]/g,''), nick: user.displayName||user.email?.split('@')[0]||'User', email: user.email||'', avatar: user.photoURL||'', bio: '', badge: 'user', online: true, banned: false, createdAt: serverTimestamp() };
           const existSnap = await getDocs(query(collection(db,'users'), where('username','==',newUser.username), limit(1)));
@@ -357,9 +343,7 @@
         if (currentUser.username === CREATOR_USERNAME && currentUser.badge !== 'creator') { await updateDoc(ref, {badge:'creator'}); currentUser.badge='creator'; }
         await updateDoc(ref, { online: true, lastSeen: serverTimestamp() });
         document.getElementById('authScreen').classList.remove('active'); document.getElementById('messengerScreen').classList.add('active');
-        document.getElementById('currentNickDisplay').textContent = currentUser.nick||currentUser.username;
-        document.getElementById('currentUsernameDisplay').textContent = '@'+currentUser.username;
-        renderAvatar(document.getElementById('currentAvatarContainer'), currentUser);
+        updateSidebarUI();
         if (currentUser.badge === 'creator') document.getElementById('adminPanelBtn').style.display = 'block';
         loadChats();
       } else {
@@ -367,6 +351,13 @@
         if (messagesUnsubscribe) messagesUnsubscribe(); if (chatsUnsubscribe) chatsUnsubscribe();
       }
     });
+
+    function updateSidebarUI() {
+      if (!currentUser) return;
+      document.getElementById('currentNickDisplay').textContent = currentUser.nick||currentUser.username;
+      document.getElementById('currentUsernameDisplay').textContent = '@'+currentUser.username;
+      renderAvatar(document.getElementById('currentAvatarContainer'), currentUser);
+    }
 
     function loadChats() {
       if (chatsUnsubscribe) chatsUnsubscribe();
@@ -428,28 +419,24 @@
         const container = document.getElementById('messagesContainer'); container.innerHTML = '';
         snap.forEach(doc => {
           const m = doc.data(); const div = document.createElement('div');
-          div.className = `message ${m.senderId === currentUser.uid ? 'own' : 'other'}`;
-          div.dataset.messageId = doc.id;
+          div.className = `message ${m.senderId === currentUser.uid ? 'own' : 'other'}`; div.dataset.messageId = doc.id;
           if (m.type === 'image' && m.imageUrl) {
             div.innerHTML = (chatData.type==='group'&&m.senderId!==currentUser.uid?`<div class="msg-sender">${m.senderName}</div>`:'');
             const img = document.createElement('img'); img.src = m.imageUrl; img.style.maxWidth='250px'; img.style.borderRadius='0.7rem';
-            img.onclick = (e) => { e.stopPropagation(); document.getElementById('previewImage').src=m.imageUrl; document.getElementById('imagePreviewModal').classList.add('active'); };
+            img.onclick = () => { document.getElementById('previewImage').src=m.imageUrl; document.getElementById('imagePreviewModal').classList.add('active'); };
             div.appendChild(img);
             if (m.text) { const txt = document.createElement('div'); txt.textContent = m.text; txt.style.marginTop='0.3rem'; div.appendChild(txt); }
           } else if (m.type === 'file' && m.fileData) {
             div.innerHTML = (chatData.type==='group'&&m.senderId!==currentUser.uid?`<div class="msg-sender">${m.senderName}</div>`:'');
             const fileDiv = document.createElement('div'); fileDiv.className = 'file-attachment';
             fileDiv.innerHTML = `<span class="file-icon">${getFileIcon(m.fileName||'')}</span><span class="file-name">${m.fileName||'Файл'}</span>`;
-            fileDiv.onclick = (e) => { e.stopPropagation();
-              const a = document.createElement('a'); a.href = m.fileData; a.download = m.fileName||'file'; a.click();
-            };
+            fileDiv.onclick = () => { const a = document.createElement('a'); a.href = m.fileData; a.download = m.fileName||'file'; a.click(); };
             div.appendChild(fileDiv);
             if (m.text) { const txt = document.createElement('div'); txt.textContent = m.text; txt.style.marginTop='0.3rem'; div.appendChild(txt); }
           } else if (m.type === 'contact_share' && m.contactData) {
-            div.innerHTML = (chatData.type==='group'&&m.senderId!==currentUser.uid?`<div class="msg-sender">${m.senderName}</div>`:'') +
-              `<div class="contact-card"><div class="avatar" style="width:36px;height:36px;"></div><span>${m.contactData.nick||m.contactData.username}</span></div>`;
+            div.innerHTML = (chatData.type==='group'&&m.senderId!==currentUser.uid?`<div class="msg-sender">${m.senderName}</div>`:'') + `<div class="contact-card"><div class="avatar" style="width:36px;height:36px;"></div><span>${m.contactData.nick||m.contactData.username}</span></div>`;
             const cardAv = div.querySelector('.avatar'); if(cardAv) renderAvatar(cardAv, m.contactData);
-            div.querySelector('.contact-card').onclick = (e) => { e.stopPropagation(); if(m.contactData?.uid) openChat(m.contactData.uid, {participants:[currentUser.uid,m.contactData.uid]}); };
+            div.querySelector('.contact-card').onclick = () => { if(m.contactData?.uid) openChat(m.contactData.uid, {participants:[currentUser.uid,m.contactData.uid]}); };
           } else {
             div.textContent = (chatData.type==='group'&&m.senderId!==currentUser.uid?m.senderName+': ':'')+(m.text||'');
           }
@@ -480,21 +467,17 @@
       let fileData = null, fileName = null;
       if (pendingFile) { fileData = await fileToBase64(pendingFile); fileName = pendingFile.name; }
       await sendMessage(text||null, fileData, fileName);
-      document.getElementById('messageInput').value = '';
-      document.getElementById('fileInput').value = '';
-      document.getElementById('filePreview').style.display = 'none';
-      pendingFile = null;
+      document.getElementById('messageInput').value = ''; document.getElementById('fileInput').value = '';
+      document.getElementById('filePreview').style.display = 'none'; pendingFile = null;
     });
-
-    document.getElementById('messageInput').addEventListener('keypress', async (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); document.getElementById('sendBtn').click(); } });
+    document.getElementById('messageInput').addEventListener('keypress', (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); document.getElementById('sendBtn').click(); } });
 
     // Группы
     document.getElementById('createGroupBtn').addEventListener('click', async () => {
       document.getElementById('createGroupModal').classList.add('active');
       const list = document.getElementById('groupMemberSelect'); list.innerHTML = '<div class="spinner"></div>'; selectedMembers.clear();
       const chatsSnap = await getDocs(query(collection(db,'chats'), where('participants','array-contains',currentUser.uid)));
-      const friendIds = new Set();
-      chatsSnap.forEach(d => { if(d.data().type !== 'group') { d.data().participants.forEach(p => { if(p !== currentUser.uid) friendIds.add(p); }); } });
+      const friendIds = new Set(); chatsSnap.forEach(d => { if(d.data().type !== 'group') { d.data().participants.forEach(p => { if(p !== currentUser.uid) friendIds.add(p); }); } });
       list.innerHTML = '';
       for (const fid of friendIds) {
         const ud = (await getDoc(doc(db,'users',fid))).data(); if(!ud||ud.banned) continue;
@@ -536,8 +519,7 @@
       }
       const addList = document.getElementById('addMembersList'); addList.innerHTML = '<div class="spinner"></div>';
       const chatsSnap = await getDocs(query(collection(db,'chats'), where('participants','array-contains',currentUser.uid)));
-      const friendIds = new Set();
-      chatsSnap.forEach(d => { if(d.data().type!=='group') { d.data().participants.forEach(p => { if(p!==currentUser.uid && !currentChatData.participants.includes(p)) friendIds.add(p); }); } });
+      const friendIds = new Set(); chatsSnap.forEach(d => { if(d.data().type!=='group') { d.data().participants.forEach(p => { if(p!==currentUser.uid && !currentChatData.participants.includes(p)) friendIds.add(p); }); } });
       addList.innerHTML = '';
       for(const fid of friendIds) {
         const ud = (await getDoc(doc(db,'users',fid))).data(); if(!ud) continue;
@@ -577,8 +559,7 @@
     });
     document.getElementById('shareContactBtn').addEventListener('click', async () => {
       const uid = document.getElementById('shareContactBtn').dataset.uid;
-      const contactData = (await getDoc(doc(db,'users',uid))).data();
-      if(!contactData) return;
+      const contactData = (await getDoc(doc(db,'users',uid))).data(); if(!contactData) return;
       await showFriendSelect('Поделиться контактом', async (friend) => {
         const chatId = [currentUser.uid,friend.uid].sort().join('_');
         await addDoc(collection(db,'messages',chatId,'messages'),{senderId:currentUser.uid,senderName:currentUser.nick||currentUser.username,type:'contact_share',contactData:{uid:contactData.uid,username:contactData.username,nick:contactData.nick,avatar:contactData.avatar||''},timestamp:serverTimestamp()});
@@ -621,9 +602,29 @@
     document.getElementById('searchUser').addEventListener('input',(e)=>{clearTimeout(searchTimeout);searchTimeout=setTimeout(()=>searchUsers(e.target.value.trim()),300);});
     document.addEventListener('click',(e)=>{if(!document.getElementById('searchBoxContainer').contains(e.target))document.getElementById('searchResults').style.display='none';});
 
-    // Настройки
-    document.getElementById('settingsBtn').addEventListener('click',()=>{document.getElementById('settingsModal').classList.add('active');document.getElementById('newUsername').value=currentUser?.username||'';document.getElementById('newNick').value=currentUser?.nick||'';document.getElementById('newBio').value=currentUser?.bio||'';});
-    document.getElementById('updateProfileBtn').addEventListener('click',async()=>{const nu=document.getElementById('newUsername').value.trim();const nick=document.getElementById('newNick').value.trim();const bio=document.getElementById('newBio').value.trim();try{if(nu&&nu!==currentUser.username){const snap=await getDocs(query(collection(db,'users'),where('username','==',nu),limit(1)));if(!snap.empty&&snap.docs[0].id!==currentUser.uid)throw new Error('@username занят');await updateDoc(doc(db,'users',currentUser.uid),{username:nu});currentUser.username=nu;}if(nick){await updateDoc(doc(db,'users',currentUser.uid),{nick});currentUser.nick=nick;}if(bio){await updateDoc(doc(db,'users',currentUser.uid),{bio});currentUser.bio=bio;}document.getElementById('currentNickDisplay').textContent=currentUser.nick;document.getElementById('currentUsernameDisplay').textContent='@'+currentUser.username;document.getElementById('profileUpdateMsg').textContent='✅ Обновлено!';setTimeout(()=>document.getElementById('settingsModal').classList.remove('active'),1000);}catch(e){document.getElementById('profileUpdateMsg').textContent=e.message;}});
+    // Настройки профиля (добавлена смена аватарки)
+    document.getElementById('settingsBtn').addEventListener('click',()=>{
+      document.getElementById('settingsModal').classList.add('active');
+      document.getElementById('newUsername').value=currentUser?.username||'';
+      document.getElementById('newNick').value=currentUser?.nick||'';
+      document.getElementById('newBio').value=currentUser?.bio||'';
+      document.getElementById('changeAvatarInput').value = '';
+    });
+    document.getElementById('updateProfileBtn').addEventListener('click',async()=>{
+      const nu=document.getElementById('newUsername').value.trim();
+      const nick=document.getElementById('newNick').value.trim();
+      const bio=document.getElementById('newBio').value.trim();
+      const avatarFile=document.getElementById('changeAvatarInput').files[0];
+      try{
+        if(nu&&nu!==currentUser.username){const snap=await getDocs(query(collection(db,'users'),where('username','==',nu),limit(1)));if(!snap.empty&&snap.docs[0].id!==currentUser.uid)throw new Error('@username занят');await updateDoc(doc(db,'users',currentUser.uid),{username:nu});currentUser.username=nu;}
+        if(nick){await updateDoc(doc(db,'users',currentUser.uid),{nick});currentUser.nick=nick;}
+        if(bio){await updateDoc(doc(db,'users',currentUser.uid),{bio});currentUser.bio=bio;}
+        if(avatarFile){const b64=await fileToBase64(avatarFile);await updateDoc(doc(db,'users',currentUser.uid),{avatar:b64});currentUser.avatar=b64;}
+        updateSidebarUI();
+        document.getElementById('profileUpdateMsg').textContent='✅ Обновлено!';
+        setTimeout(()=>document.getElementById('settingsModal').classList.remove('active'),1000);
+      }catch(e){document.getElementById('profileUpdateMsg').textContent=e.message;}
+    });
     document.getElementById('logoutBtn').addEventListener('click',async()=>{await updateDoc(doc(db,'users',currentUser.uid),{online:false});await signOut(auth);});
 
     document.getElementById('mobileBackBtn').addEventListener('click',()=>document.getElementById('sidebar').classList.toggle('open'));
