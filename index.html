@@ -7,88 +7,42 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         :root {
             --primary: #6C5CE7;
-            --primary-dark: #5A4BD1;
             --secondary: #00CEC9;
             --dark: #2D3436;
             --light: #F8F9FA;
-            --gray: #636E72;
-            --light-gray: #DFE6E9;
-            --white: #FFFFFF;
             --danger: #FF6B6B;
             --success: #51CF66;
             --warning: #FECA57;
             --gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition: all 0.3s ease;
         }
 
         body {
             font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: var(--gradient);
             min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            overflow: hidden;
             margin: 0;
             padding: 0;
         }
 
-        body::before {
-            content: '';
-            position: fixed;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
-            animation: rotate 20s linear infinite;
-            pointer-events: none;
-        }
-
-        @keyframes rotate {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-
-        .app-container {
-            width: 100vw;
-            height: 100vh;
-            background: rgba(255, 255, 255, 0.98);
-            backdrop-filter: blur(20px);
-            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.25);
-            display: flex;
-            overflow: hidden;
-            position: relative;
-            z-index: 1;
-            animation: slideIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-        }
-
-        @keyframes slideIn {
-            from { opacity: 0; transform: scale(0.98); }
-            to { opacity: 1; transform: scale(1); }
-        }
-
-        /* Auth Styles */
         .auth-container {
             width: 100%;
             max-width: 420px;
-            background: rgba(255, 255, 255, 0.98);
+            background: white;
             border-radius: 30px;
             padding: 40px;
-            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.25);
-            backdrop-filter: blur(20px);
-            animation: slideIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-            position: relative;
-            z-index: 1;
+            box-shadow: 0 25px 80px rgba(0,0,0,0.3);
+            margin: 50px auto;
+            animation: slideIn 0.5s ease;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .auth-header {
@@ -107,19 +61,13 @@
             justify-content: center;
             font-size: 35px;
             color: white;
-            box-shadow: 0 15px 30px rgba(108, 92, 231, 0.4);
-            animation: float 3s ease-in-out infinite;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
+            box-shadow: 0 15px 30px rgba(108,92,231,0.4);
         }
 
         .auth-header h2 {
             font-size: 28px;
-            color: #2D3436;
-            margin-bottom: 10px;
+            color: var(--dark);
+            margin-bottom: 5px;
         }
 
         .auth-header p {
@@ -134,13 +82,12 @@
         .input-group label {
             display: block;
             margin-bottom: 8px;
-            color: #2D3436;
             font-weight: 500;
             font-size: 14px;
+            color: var(--dark);
         }
 
-        .input-group input,
-        .input-group textarea {
+        .input-group input, .input-group textarea {
             width: 100%;
             padding: 12px 15px;
             border: 2px solid #DFE6E9;
@@ -151,10 +98,9 @@
             transition: var(--transition);
         }
 
-        .input-group input:focus,
-        .input-group textarea:focus {
-            border-color: #6C5CE7;
-            box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.1);
+        .input-group input:focus, .input-group textarea:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(108,92,231,0.1);
         }
 
         .btn {
@@ -165,68 +111,36 @@
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
+            transition: var(--transition);
             text-transform: uppercase;
             letter-spacing: 1px;
-            position: relative;
-            overflow: hidden;
-            transition: var(--transition);
-        }
-
-        .btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-            transition: left 0.5s;
-        }
-
-        .btn:hover::before {
-            left: 100%;
         }
 
         .btn-primary {
             background: var(--gradient);
             color: white;
-            box-shadow: 0 10px 25px rgba(108, 92, 231, 0.3);
+            box-shadow: 0 10px 25px rgba(108,92,231,0.3);
         }
 
         .btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 15px 35px rgba(108, 92, 231, 0.4);
+            box-shadow: 0 15px 35px rgba(108,92,231,0.4);
         }
 
         .btn-secondary {
             background: white;
-            color: #6C5CE7;
-            border: 2px solid #6C5CE7;
+            color: var(--primary);
+            border: 2px solid var(--primary);
             margin-top: 10px;
         }
 
         .btn-warning {
-            background: #FECA57;
-            color: #2D3436;
-        }
-
-        .auth-links {
-            text-align: center;
-            margin-top: 20px;
-        }
-
-        .auth-links a {
-            color: #6C5CE7;
-            text-decoration: none;
-            font-weight: 500;
-        }
-
-        .auth-links a:hover {
-            color: #5A4BD1;
+            background: var(--warning);
+            color: var(--dark);
         }
 
         .error-message {
-            color: #FF6B6B;
+            color: var(--danger);
             font-size: 13px;
             margin-top: 5px;
             display: none;
@@ -236,7 +150,26 @@
             display: block;
         }
 
-        /* Sidebar */
+        .auth-links {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .auth-links a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        /* App Layout */
+        .app-container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            background: white;
+        }
+
         .sidebar {
             width: 350px;
             min-width: 350px;
@@ -244,13 +177,11 @@
             color: white;
             display: flex;
             flex-direction: column;
-            border-right: 1px solid rgba(255,255,255,0.1);
         }
 
         .sidebar-header {
             padding: 25px;
             border-bottom: 1px solid rgba(255,255,255,0.1);
-            background: rgba(255,255,255,0.05);
         }
 
         .user-info {
@@ -260,50 +191,47 @@
             margin-bottom: 20px;
         }
 
-        .avatar-container {
-            position: relative;
-            cursor: pointer;
-        }
-
         .avatar {
             width: 50px;
             height: 50px;
             border-radius: 50%;
             object-fit: cover;
-            border: 3px solid #00CEC9;
-            box-shadow: 0 0 20px rgba(0, 206, 201, 0.4);
+            border: 3px solid var(--secondary);
+            cursor: pointer;
             transition: var(--transition);
         }
 
         .avatar:hover {
             transform: scale(1.1);
-            box-shadow: 0 0 30px rgba(0, 206, 201, 0.6);
         }
 
         .online-dot {
+            width: 12px;
+            height: 12px;
+            background: var(--success);
+            border-radius: 50%;
             position: absolute;
             bottom: 3px;
             right: 3px;
-            width: 12px;
-            height: 12px;
-            background: #51CF66;
-            border-radius: 50%;
             border: 2px solid #2D3436;
+        }
+
+        .avatar-container {
+            position: relative;
+            cursor: pointer;
         }
 
         .verified-badge {
             position: absolute;
             top: -5px;
             right: -5px;
-            color: #00CEC9;
+            color: var(--secondary);
             font-size: 16px;
-            filter: drop-shadow(0 0 3px rgba(0, 206, 201, 0.6));
         }
 
         .user-details h3 {
             font-size: 16px;
-            font-weight: 600;
-            margin-bottom: 5px;
+            margin-bottom: 3px;
         }
 
         .user-details p {
@@ -315,7 +243,7 @@
             position: relative;
         }
 
-        .search-input {
+        .search-bar input {
             width: 100%;
             padding: 12px 15px 12px 42px;
             background: rgba(255,255,255,0.1);
@@ -323,21 +251,15 @@
             border-radius: 15px;
             color: white;
             font-size: 14px;
-            transition: var(--transition);
             outline: none;
         }
 
-        .search-input:focus {
+        .search-bar input:focus {
+            border-color: var(--secondary);
             background: rgba(255,255,255,0.15);
-            border-color: #00CEC9;
-            box-shadow: 0 0 20px rgba(0, 206, 201, 0.2);
         }
 
-        .search-input::placeholder {
-            color: rgba(255,255,255,0.5);
-        }
-
-        .search-icon {
+        .search-bar i {
             position: absolute;
             left: 15px;
             top: 50%;
@@ -356,39 +278,18 @@
             align-items: center;
             gap: 12px;
             padding: 12px 15px;
-            margin-bottom: 5px;
             border-radius: 15px;
             cursor: pointer;
             transition: var(--transition);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .chat-item::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 0;
-            height: 100%;
-            width: 4px;
-            background: linear-gradient(180deg, #00CEC9, transparent);
-            border-radius: 0 4px 4px 0;
-            transform: scaleY(0);
-            transition: transform 0.3s ease;
+            margin-bottom: 5px;
         }
 
         .chat-item:hover {
             background: rgba(255,255,255,0.1);
-            transform: translateX(5px);
-        }
-
-        .chat-item:hover::before {
-            transform: scaleY(1);
         }
 
         .chat-item.active {
-            background: rgba(0, 206, 201, 0.2);
-            box-shadow: 0 5px 20px rgba(0, 206, 201, 0.15);
+            background: rgba(0,206,201,0.2);
         }
 
         .chat-avatar {
@@ -396,7 +297,6 @@
             height: 45px;
             border-radius: 50%;
             object-fit: cover;
-            border: 2px solid rgba(255,255,255,0.3);
         }
 
         .chat-info {
@@ -408,14 +308,6 @@
             font-size: 15px;
             font-weight: 600;
             margin-bottom: 3px;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .chat-verified {
-            color: #00CEC9;
-            font-size: 14px;
         }
 
         .chat-last-message {
@@ -427,22 +319,19 @@
         }
 
         .unread-badge {
-            background: #00CEC9;
-            color: #2D3436;
+            background: var(--secondary);
+            color: var(--dark);
             font-size: 11px;
             font-weight: 700;
             padding: 3px 8px;
             border-radius: 10px;
-            min-width: 20px;
-            text-align: center;
         }
 
-        /* Main Chat */
         .main-chat {
             flex: 1;
             display: flex;
             flex-direction: column;
-            background: #F8F9FA;
+            background: var(--light);
         }
 
         .chat-header {
@@ -452,7 +341,6 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.03);
         }
 
         .chat-partner-info {
@@ -470,10 +358,7 @@
 
         .partner-details h3 {
             font-size: 16px;
-            color: #2D3436;
-            display: flex;
-            align-items: center;
-            gap: 5px;
+            color: var(--dark);
         }
 
         .partner-details p {
@@ -481,31 +366,20 @@
             color: #636E72;
         }
 
-        .chat-actions {
-            display: flex;
-            gap: 10px;
-        }
-
         .icon-btn {
             width: 40px;
             height: 40px;
             border-radius: 50%;
             border: none;
-            background: #F8F9FA;
-            color: #636E72;
+            background: var(--light);
             cursor: pointer;
-            transition: var(--transition);
-            display: flex;
-            align-items: center;
-            justify-content: center;
             font-size: 18px;
+            transition: var(--transition);
         }
 
         .icon-btn:hover {
-            background: #6C5CE7;
+            background: var(--primary);
             color: white;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(108, 92, 231, 0.3);
         }
 
         .messages-area {
@@ -521,9 +395,8 @@
             max-width: 60%;
             padding: 12px 18px;
             border-radius: 20px;
-            position: relative;
-            animation: messagePop 0.3s ease;
             word-wrap: break-word;
+            animation: messagePop 0.3s ease;
         }
 
         @keyframes messagePop {
@@ -533,16 +406,14 @@
 
         .message.sent {
             align-self: flex-end;
-            background: linear-gradient(135deg, #6C5CE7, #8B7CF6);
+            background: var(--gradient);
             color: white;
-            border-bottom-right-radius: 5px;
         }
 
         .message.received {
             align-self: flex-start;
             background: white;
-            color: #2D3436;
-            border-bottom-left-radius: 5px;
+            color: var(--dark);
             box-shadow: 0 2px 10px rgba(0,0,0,0.05);
         }
 
@@ -557,6 +428,15 @@
             max-height: 250px;
             border-radius: 12px;
             cursor: pointer;
+        }
+
+        .message-file {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 10px;
         }
 
         .input-area {
@@ -574,18 +454,14 @@
             border-radius: 50%;
             border: 2px solid #DFE6E9;
             background: white;
-            color: #636E72;
             cursor: pointer;
             font-size: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
             transition: var(--transition);
         }
 
         .attach-btn:hover {
-            border-color: #6C5CE7;
-            color: #6C5CE7;
+            border-color: var(--primary);
+            color: var(--primary);
             transform: rotate(15deg);
         }
 
@@ -597,12 +473,10 @@
             font-size: 14px;
             outline: none;
             font-family: 'Inter', sans-serif;
-            transition: var(--transition);
         }
 
         .message-input:focus {
-            border-color: #6C5CE7;
-            box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.1);
+            border-color: var(--primary);
         }
 
         .send-btn {
@@ -610,17 +484,19 @@
             height: 45px;
             border-radius: 50%;
             border: none;
-            background: linear-gradient(135deg, #6C5CE7, #8B7CF6);
+            background: var(--gradient);
             color: white;
             cursor: pointer;
             font-size: 18px;
-            box-shadow: 0 5px 20px rgba(108, 92, 231, 0.3);
             transition: var(--transition);
         }
 
         .send-btn:hover {
             transform: scale(1.1);
-            box-shadow: 0 8px 25px rgba(108, 92, 231, 0.4);
+        }
+
+        .file-input {
+            display: none;
         }
 
         /* Modal */
@@ -650,7 +526,6 @@
             width: 90%;
             max-height: 80vh;
             overflow-y: auto;
-            animation: slideIn 0.4s ease;
         }
 
         .modal-header {
@@ -665,17 +540,14 @@
             height: 35px;
             border-radius: 50%;
             border: none;
-            background: #F8F9FA;
+            background: var(--light);
             cursor: pointer;
             font-size: 20px;
             transition: var(--transition);
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
 
         .modal-close:hover {
-            background: #FF6B6B;
+            background: var(--danger);
             color: white;
             transform: rotate(90deg);
         }
@@ -690,17 +562,15 @@
 
         .admin-tab {
             padding: 10px 20px;
-            background: none;
             border: none;
             cursor: pointer;
             font-weight: 500;
-            color: #636E72;
-            transition: var(--transition);
             border-radius: 10px;
+            transition: var(--transition);
         }
 
         .admin-tab.active {
-            background: #6C5CE7;
+            background: var(--primary);
             color: white;
         }
 
@@ -709,15 +579,14 @@
             align-items: center;
             justify-content: space-between;
             padding: 15px;
-            background: #F8F9FA;
+            background: var(--light);
             border-radius: 15px;
             margin-bottom: 10px;
-            transition: var(--transition);
         }
 
         .user-list-item.banned {
-            opacity: 0.6;
             background: #FFE0E0;
+            opacity: 0.6;
         }
 
         .user-actions {
@@ -733,9 +602,6 @@
             font-size: 13px;
             font-weight: 500;
             transition: var(--transition);
-            display: flex;
-            align-items: center;
-            gap: 5px;
         }
 
         .mini-btn:hover {
@@ -743,7 +609,7 @@
         }
 
         .mini-btn.verify {
-            background: #00CEC9;
+            background: var(--secondary);
             color: white;
         }
 
@@ -753,12 +619,12 @@
         }
 
         .mini-btn.ban {
-            background: #FF6B6B;
+            background: var(--danger);
             color: white;
         }
 
         .mini-btn.unban {
-            background: #51CF66;
+            background: var(--success);
             color: white;
         }
 
@@ -766,17 +632,9 @@
             width: 6px;
         }
 
-        ::-webkit-scrollbar-track {
-            background: transparent;
-        }
-
         ::-webkit-scrollbar-thumb {
-            background: rgba(108, 92, 231, 0.3);
+            background: rgba(108,92,231,0.3);
             border-radius: 3px;
-        }
-
-        .file-input {
-            display: none;
         }
 
         .toast {
@@ -789,9 +647,6 @@
             box-shadow: 0 10px 40px rgba(0,0,0,0.15);
             z-index: 2000;
             animation: slideInRight 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 10px;
         }
 
         @keyframes slideInRight {
@@ -799,149 +654,100 @@
             to { transform: translateX(0); opacity: 1; }
         }
 
-        .toast.success {
-            border-left: 4px solid #51CF66;
-        }
-
-        .toast.error {
-            border-left: 4px solid #FF6B6B;
-        }
+        .toast.success { border-left: 4px solid var(--success); }
+        .toast.error { border-left: 4px solid var(--danger); }
     </style>
 </head>
 <body>
     <div id="app"></div>
 
-    <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
 
     <script>
-        // Firebase configuration
         const firebaseConfig = {
             apiKey: "AIzaSyCTIzwvGhQy5nZWlBHgCNOPeLbDRktuWtE",
             authDomain: "bordgram.firebaseapp.com",
             projectId: "bordgram",
             storageBucket: "bordgram.firebasestorage.app",
             messagingSenderId: "260333055054",
-            appId: "1:260333055054:web:a73aac07c442dacd2be71f",
-            measurementId: "G-75YQ5TE49Y"
+            appId: "1:260333055054:web:a73aac07c442dacd2be71f"
         };
 
-        // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.firestore();
         const storage = firebase.storage();
 
-        console.log('Firebase initialized successfully');
-
-        // App State
         let currentUser = null;
         let currentChat = null;
         let messagesListener = null;
         let chatsListener = null;
 
-        // Wait for DOM to be ready
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('DOM loaded, initializing app...');
-            
-            // Check auth state
-            auth.onAuthStateChanged(async (user) => {
-                console.log('Auth state changed:', user ? 'User logged in' : 'No user');
-                
-                if (user) {
-                    await loadUserData(user);
-                    if (currentUser && currentUser.isBanned) {
-                        await auth.signOut();
-                        showAuthPage('login');
-                        showToast('Ваш аккаунт заблокирован администратором', 'error');
-                        return;
-                    }
-                    showMainApp();
-                } else {
-                    showAuthPage('login');
-                }
-            });
-        });
-
-        async function loadUserData(user) {
-            try {
+        auth.onAuthStateChanged(async (user) => {
+            if (user) {
                 const userDoc = await db.collection('users').doc(user.uid).get();
                 if (userDoc.exists) {
                     currentUser = { ...userDoc.data(), uid: user.uid };
-                    console.log('User data loaded:', currentUser.username);
-                    return true;
-                } else {
-                    console.log('Creating new user document');
-                    // Create user document
-                    const userData = {
-                        username: user.email ? user.email.split('@')[0] : 'user',
-                        nickname: user.email ? user.email.split('@')[0] : 'User',
-                        email: user.email || '',
-                        avatar: '',
-                        bio: '',
-                        isAdmin: false,
-                        isVerified: false,
-                        isBanned: false,
-                        createdAt: new Date().toISOString()
-                    };
-                    await db.collection('users').doc(user.uid).set(userData);
-                    currentUser = { ...userData, uid: user.uid };
-                    return true;
+                    if (currentUser.isBanned) {
+                        await auth.signOut();
+                        showLogin();
+                        showToast('Ваш аккаунт заблокирован', 'error');
+                        return;
+                    }
+                    showApp();
                 }
-            } catch (error) {
-                console.error('Error loading user data:', error);
-                return false;
+            } else {
+                showLogin();
             }
-        }
+        });
 
-        function showAuthPage(page = 'login') {
-            console.log('Showing auth page:', page);
-            const app = document.getElementById('app');
-            
-            if (page === 'login') {
-                app.innerHTML = `
+        function showLogin() {
+            document.getElementById('app').innerHTML = `
+                <div style="display:flex; align-items:center; justify-content:center; min-height:100vh; padding:20px;">
                     <div class="auth-container">
                         <div class="auth-header">
-                            <div class="auth-logo">
-                                <i class="fas fa-comments"></i>
-                            </div>
+                            <div class="auth-logo"><i class="fas fa-comments"></i></div>
                             <h2>BordGram</h2>
                             <p>Войдите в свой аккаунт</p>
                         </div>
                         <div class="input-group">
-                            <label>Имя пользователя</label>
-                            <input type="text" id="loginUsername" placeholder="Введите имя пользователя" autocomplete="username">
-                            <div class="error-message" id="loginUsernameError"></div>
+                            <label>Никнейм</label>
+                            <input type="text" id="loginNickname" placeholder="Введите никнейм" autocomplete="username">
+                            <div class="error-message" id="loginNicknameError"></div>
                         </div>
                         <div class="input-group">
                             <label>Пароль</label>
                             <input type="password" id="loginPassword" placeholder="Введите пароль" autocomplete="current-password">
                             <div class="error-message" id="loginPasswordError"></div>
                         </div>
-                        <div id="loginError" class="error-message" style="margin-bottom: 15px;"></div>
-                        <button class="btn btn-primary" id="loginBtn">
-                            <i class="fas fa-sign-in-alt"></i> Войти
-                        </button>
+                        <div id="loginError" class="error-message" style="margin-bottom:15px;"></div>
+                        <button class="btn btn-primary" id="loginBtn"><i class="fas fa-sign-in-alt"></i> Войти</button>
                         <div class="auth-links">
-                            <p>Нет аккаунта? <a href="#" id="showRegister">Зарегистрироваться</a></p>
+                            <p>Нет аккаунта? <a id="showRegister">Зарегистрироваться</a></p>
                         </div>
                     </div>
-                `;
-            } else {
-                app.innerHTML = `
+                </div>
+            `;
+
+            document.getElementById('loginBtn').onclick = login;
+            document.getElementById('showRegister').onclick = () => showRegister();
+            document.onkeypress = (e) => { if (e.key === 'Enter') login(); };
+        }
+
+        function showRegister() {
+            document.getElementById('app').innerHTML = `
+                <div style="display:flex; align-items:center; justify-content:center; min-height:100vh; padding:20px;">
                     <div class="auth-container">
                         <div class="auth-header">
-                            <div class="auth-logo">
-                                <i class="fas fa-user-plus"></i>
-                            </div>
+                            <div class="auth-logo"><i class="fas fa-user-plus"></i></div>
                             <h2>Регистрация</h2>
                             <p>Создайте новый аккаунт</p>
                         </div>
                         <div class="input-group">
-                            <label>Имя пользователя</label>
+                            <label>Имя пользователя (username)</label>
                             <input type="text" id="regUsername" placeholder="Придумайте имя пользователя">
                             <div class="error-message" id="regUsernameError"></div>
                         </div>
@@ -952,69 +758,116 @@
                         </div>
                         <div class="input-group">
                             <label>Email</label>
-                            <input type="email" id="regEmail" placeholder="Введите email" autocomplete="email">
+                            <input type="email" id="regEmail" placeholder="Введите email">
                             <div class="error-message" id="regEmailError"></div>
                         </div>
                         <div class="input-group">
-                            <label>Пароль</label>
-                            <input type="password" id="regPassword" placeholder="Придумайте пароль (минимум 6 символов)" autocomplete="new-password">
+                            <label>Пароль (минимум 6 символов)</label>
+                            <input type="password" id="regPassword" placeholder="Придумайте пароль">
                             <div class="error-message" id="regPasswordError"></div>
                         </div>
-                        <div id="registerError" class="error-message" style="margin-bottom: 15px;"></div>
-                        <button class="btn btn-primary" id="registerBtn">
-                            <i class="fas fa-user-plus"></i> Зарегистрироваться
-                        </button>
+                        <div id="registerError" class="error-message" style="margin-bottom:15px;"></div>
+                        <button class="btn btn-primary" id="registerBtn"><i class="fas fa-user-plus"></i> Зарегистрироваться</button>
                         <div class="auth-links">
-                            <p>Уже есть аккаунт? <a href="#" id="showLogin">Войти</a></p>
+                            <p>Уже есть аккаунт? <a id="showLogin">Войти</a></p>
                         </div>
                     </div>
-                `;
-            }
+                </div>
+            `;
 
-            attachAuthListeners();
+            document.getElementById('registerBtn').onclick = register;
+            document.getElementById('showLogin').onclick = () => showLogin();
         }
 
-        function attachAuthListeners() {
-            // Navigation
-            const showRegister = document.getElementById('showRegister');
-            const showLogin = document.getElementById('showLogin');
-            
-            if (showRegister) {
-                showRegister.onclick = function(e) {
-                    e.preventDefault();
-                    showAuthPage('register');
-                };
-            }
-            
-            if (showLogin) {
-                showLogin.onclick = function(e) {
-                    e.preventDefault();
-                    showAuthPage('login');
-                };
-            }
+        async function login() {
+            clearErrors();
+            const nickname = document.getElementById('loginNickname')?.value?.trim();
+            const password = document.getElementById('loginPassword')?.value?.trim();
+            let hasError = false;
 
-            // Login
-            const loginBtn = document.getElementById('loginBtn');
-            if (loginBtn) {
-                loginBtn.onclick = login;
-            }
+            if (!nickname) { showError('loginNicknameError', 'Введите никнейм'); hasError = true; }
+            if (!password) { showError('loginPasswordError', 'Введите пароль'); hasError = true; }
+            if (hasError) return;
 
-            // Register
-            const registerBtn = document.getElementById('registerBtn');
-            if (registerBtn) {
-                registerBtn.onclick = register;
-            }
+            try {
+                // Ищем пользователя по никнейму
+                const snapshot = await db.collection('users')
+                    .where('nickname', '==', nickname)
+                    .limit(1)
+                    .get();
 
-            // Enter key
-            document.onkeypress = function(e) {
-                if (e.key === 'Enter') {
-                    if (document.getElementById('loginBtn')) {
-                        login();
-                    } else if (document.getElementById('registerBtn')) {
-                        register();
-                    }
+                if (snapshot.empty) {
+                    showError('loginError', 'Пользователь с таким никнеймом не найден');
+                    return;
                 }
-            };
+
+                const userData = snapshot.docs[0].data();
+                
+                if (userData.isBanned) {
+                    showError('loginError', 'Ваш аккаунт заблокирован');
+                    return;
+                }
+
+                // Входим через email
+                await auth.signInWithEmailAndPassword(userData.email, password);
+            } catch (error) {
+                let msg = 'Ошибка входа';
+                if (error.code === 'auth/wrong-password') msg = 'Неверный пароль';
+                else if (error.code === 'auth/invalid-credential') msg = 'Неверные данные';
+                showError('loginError', msg);
+            }
+        }
+
+        async function register() {
+            clearErrors();
+            const username = document.getElementById('regUsername')?.value?.trim();
+            const nickname = document.getElementById('regNickname')?.value?.trim();
+            const email = document.getElementById('regEmail')?.value?.trim();
+            const password = document.getElementById('regPassword')?.value?.trim();
+            let hasError = false;
+
+            if (!username) { showError('regUsernameError', 'Введите имя пользователя'); hasError = true; }
+            else if (username.length < 3) { showError('regUsernameError', 'Минимум 3 символа'); hasError = true; }
+            if (!nickname) { showError('regNicknameError', 'Введите никнейм'); hasError = true; }
+            if (!email) { showError('regEmailError', 'Введите email'); hasError = true; }
+            if (!password) { showError('regPasswordError', 'Введите пароль'); hasError = true; }
+            else if (password.length < 6) { showError('regPasswordError', 'Минимум 6 символов'); hasError = true; }
+            if (hasError) return;
+
+            try {
+                // Проверяем username
+                const usernameSnap = await db.collection('users').where('username', '==', username).limit(1).get();
+                if (!usernameSnap.empty) {
+                    const u = usernameSnap.docs[0].data();
+                    if (u.isBanned) {
+                        showError('registerError', 'Это имя пользователя заблокировано');
+                    } else {
+                        showError('regUsernameError', 'Имя пользователя уже занято');
+                    }
+                    return;
+                }
+
+                // Проверяем nickname
+                const nicknameSnap = await db.collection('users').where('nickname', '==', nickname).limit(1).get();
+                if (!nicknameSnap.empty) {
+                    showError('regNicknameError', 'Этот никнейм уже занят');
+                    return;
+                }
+
+                const result = await auth.createUserWithEmailAndPassword(email, password);
+                await db.collection('users').doc(result.user.uid).set({
+                    username, nickname, email,
+                    avatar: '', bio: '',
+                    isAdmin: false, isVerified: false, isBanned: false,
+                    createdAt: new Date().toISOString()
+                });
+                showToast('Регистрация успешна!', 'success');
+            } catch (error) {
+                let msg = 'Ошибка регистрации';
+                if (error.code === 'auth/email-already-in-use') msg = 'Этот email уже используется';
+                else if (error.code === 'auth/weak-password') msg = 'Пароль слишком слабый';
+                showError('registerError', msg);
+            }
         }
 
         function clearErrors() {
@@ -1024,197 +877,14 @@
             });
         }
 
-        function showFieldError(elementId, message) {
-            const element = document.getElementById(elementId);
-            if (element) {
-                element.textContent = message;
-                element.classList.add('show');
-            }
+        function showError(id, msg) {
+            const el = document.getElementById(id);
+            if (el) { el.textContent = msg; el.classList.add('show'); }
         }
 
-        async function login() {
-            clearErrors();
-
-            const username = document.getElementById('loginUsername')?.value?.trim();
-            const password = document.getElementById('loginPassword')?.value?.trim();
-            let hasError = false;
-
-            if (!username) {
-                showFieldError('loginUsernameError', 'Введите имя пользователя');
-                hasError = true;
-            }
-
-            if (!password) {
-                showFieldError('loginPasswordError', 'Введите пароль');
-                hasError = true;
-            }
-
-            if (hasError) return;
-
-            try {
-                // Special admin check
-                if (username === 'BordGram' && password === '09823065890dD') {
-                    const adminEmail = 'admin@bordgram.com';
-                    try {
-                        await auth.signInWithEmailAndPassword(adminEmail, password);
-                        return;
-                    } catch (adminError) {
-                        if (adminError.code === 'auth/user-not-found') {
-                            // Create admin account
-                            const userCredential = await auth.createUserWithEmailAndPassword(adminEmail, password);
-                            await db.collection('users').doc(userCredential.user.uid).set({
-                                username: 'BordGram',
-                                nickname: 'Admin',
-                                email: adminEmail,
-                                avatar: '',
-                                bio: 'Администратор BordGram',
-                                isAdmin: true,
-                                isVerified: true,
-                                isBanned: false,
-                                createdAt: new Date().toISOString()
-                            });
-                            return;
-                        }
-                        throw adminError;
-                    }
-                }
-
-                // Find user by username
-                const snapshot = await db.collection('users')
-                    .where('username', '==', username)
-                    .limit(1)
-                    .get();
-
-                if (snapshot.empty) {
-                    showFieldError('loginError', 'Пользователь не найден');
-                    return;
-                }
-
-                const userData = snapshot.docs[0].data();
-
-                if (userData.isBanned) {
-                    showFieldError('loginError', 'Ваш аккаунт заблокирован администратором');
-                    return;
-                }
-
-                await auth.signInWithEmailAndPassword(userData.email, password);
-            } catch (error) {
-                console.error('Login error:', error);
-                let errorMessage = 'Ошибка входа';
-                
-                switch (error.code) {
-                    case 'auth/wrong-password':
-                        errorMessage = 'Неверный пароль';
-                        break;
-                    case 'auth/user-not-found':
-                        errorMessage = 'Пользователь не найден';
-                        break;
-                    case 'auth/too-many-requests':
-                        errorMessage = 'Слишком много попыток. Попробуйте позже';
-                        break;
-                    default:
-                        errorMessage = 'Ошибка входа. Проверьте данные';
-                }
-                
-                showFieldError('loginError', errorMessage);
-            }
-        }
-
-        async function register() {
-            clearErrors();
-
-            const username = document.getElementById('regUsername')?.value?.trim();
-            const nickname = document.getElementById('regNickname')?.value?.trim();
-            const email = document.getElementById('regEmail')?.value?.trim();
-            const password = document.getElementById('regPassword')?.value?.trim();
-            let hasError = false;
-
-            if (!username) {
-                showFieldError('regUsernameError', 'Введите имя пользователя');
-                hasError = true;
-            } else if (username.length < 3) {
-                showFieldError('regUsernameError', 'Минимум 3 символа');
-                hasError = true;
-            }
-
-            if (!nickname) {
-                showFieldError('regNicknameError', 'Введите никнейм');
-                hasError = true;
-            }
-
-            if (!email) {
-                showFieldError('regEmailError', 'Введите email');
-                hasError = true;
-            } else if (!email.includes('@')) {
-                showFieldError('regEmailError', 'Неверный формат email');
-                hasError = true;
-            }
-
-            if (!password) {
-                showFieldError('regPasswordError', 'Введите пароль');
-                hasError = true;
-            } else if (password.length < 6) {
-                showFieldError('regPasswordError', 'Минимум 6 символов');
-                hasError = true;
-            }
-
-            if (hasError) return;
-
-            try {
-                // Check if username exists
-                const usernameSnapshot = await db.collection('users')
-                    .where('username', '==', username)
-                    .limit(1)
-                    .get();
-                
-                if (!usernameSnapshot.empty) {
-                    const existingUser = usernameSnapshot.docs[0].data();
-                    if (existingUser.isBanned) {
-                        showFieldError('registerError', 'Это имя пользователя заблокировано администратором');
-                    } else {
-                        showFieldError('regUsernameError', 'Имя пользователя уже занято');
-                    }
-                    return;
-                }
-
-                // Create user
-                const userCredential = await auth.createUserWithEmailAndPassword(email, password);
-                
-                await db.collection('users').doc(userCredential.user.uid).set({
-                    username: username,
-                    nickname: nickname,
-                    email: email,
-                    avatar: '',
-                    bio: '',
-                    isAdmin: false,
-                    isVerified: false,
-                    isBanned: false,
-                    createdAt: new Date().toISOString()
-                });
-
-                showToast('Регистрация успешна! Добро пожаловать!', 'success');
-            } catch (error) {
-                console.error('Registration error:', error);
-                let errorMessage = 'Ошибка регистрации';
-                
-                if (error.code === 'auth/email-already-in-use') {
-                    errorMessage = 'Этот email уже используется';
-                } else if (error.code === 'auth/weak-password') {
-                    errorMessage = 'Пароль слишком слабый';
-                }
-                
-                showFieldError('registerError', errorMessage);
-            }
-        }
-
-        function showMainApp() {
-            if (!currentUser) {
-                console.error('No current user');
-                return;
-            }
-            
-            console.log('Showing main app for user:', currentUser.username);
-            const isAdmin = currentUser.username === 'BordGram' || currentUser.isAdmin;
+        function showApp() {
+            if (!currentUser) return;
+            const isAdmin = currentUser.isAdmin || currentUser.username === 'BordGram';
             
             document.getElementById('app').innerHTML = `
                 <div class="app-container">
@@ -1222,53 +892,47 @@
                         <div class="sidebar-header">
                             <div class="user-info">
                                 <div class="avatar-container" id="settingsBtn">
-                                    <img src="${currentUser.avatar || 'https://via.placeholder.com/50'}" class="avatar" alt="Avatar">
+                                    <img src="${currentUser.avatar || 'https://via.placeholder.com/50'}" class="avatar">
                                     <span class="online-dot"></span>
                                     ${currentUser.isVerified ? '<i class="fas fa-check-circle verified-badge"></i>' : ''}
                                 </div>
                                 <div class="user-details">
-                                    <h3>${escapeHtml(currentUser.nickname || currentUser.username)}</h3>
-                                    <p>@${escapeHtml(currentUser.username)} ${currentUser.isVerified ? '<i class="fas fa-check-circle" style="color: #00CEC9;"></i>' : ''}</p>
+                                    <h3>${escHtml(currentUser.nickname || currentUser.username)}</h3>
+                                    <p>@${escHtml(currentUser.username)}</p>
                                 </div>
                             </div>
                             <div class="search-bar">
-                                <i class="fas fa-search search-icon"></i>
-                                <input type="text" class="search-input" id="searchUsers" placeholder="Поиск диалогов...">
+                                <i class="fas fa-search"></i>
+                                <input type="text" id="searchUsers" placeholder="Поиск диалогов...">
                             </div>
                         </div>
                         <div class="chat-list" id="chatList">
-                            <div style="text-align: center; padding: 20px; color: rgba(255,255,255,0.5);">
-                                <i class="fas fa-spinner fa-spin"></i> Загрузка диалогов...
-                            </div>
+                            <div style="text-align:center;padding:20px;color:rgba(255,255,255,0.5);">Загрузка...</div>
                         </div>
-                        <div style="padding: 15px; display: flex; flex-direction: column; gap: 10px;">
-                            ${isAdmin ? `<button class="btn btn-warning" id="adminPanelBtn"><i class="fas fa-crown"></i> Админ-панель</button>` : ''}
+                        <div style="padding:15px;display:flex;flex-direction:column;gap:10px;">
+                            ${isAdmin ? '<button class="btn btn-warning" id="adminBtn"><i class="fas fa-crown"></i> Админ-панель</button>' : ''}
                             <button class="btn btn-secondary" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Выйти</button>
                         </div>
                     </div>
                     <div class="main-chat">
                         <div class="chat-header">
                             <div class="chat-partner-info" id="chatPartnerInfo">
-                                <div style="text-align: center; padding: 20px;">
-                                    <i class="fas fa-comments" style="font-size: 48px; color: #DFE6E9;"></i>
-                                    <h3 style="color: #636E72;">Выберите диалог</h3>
-                                    <p style="color: #636E72;">Начните общение с друзьями</p>
+                                <div style="text-align:center;padding:20px;">
+                                    <i class="fas fa-comments" style="font-size:48px;color:#DFE6E9;"></i>
+                                    <h3 style="color:#636E72;">Выберите диалог</h3>
                                 </div>
                             </div>
                             <div class="chat-actions">
-                                <button class="icon-btn" id="addFriendBtn" title="Добавить друга">
-                                    <i class="fas fa-user-plus"></i>
-                                </button>
+                                <button class="icon-btn" id="addFriendBtn"><i class="fas fa-user-plus"></i></button>
                             </div>
                         </div>
                         <div class="messages-area" id="messagesArea">
-                            <div style="text-align: center; padding: 40px;">
-                                <i class="fas fa-comment-dots" style="font-size: 64px; color: #DFE6E9;"></i>
-                                <p style="font-size: 18px; color: #636E72; margin-top: 20px;">Начните общение</p>
-                                <p style="color: #636E72;">Выберите диалог или найдите друзей</p>
+                            <div style="text-align:center;padding:40px;">
+                                <i class="fas fa-comment-dots" style="font-size:64px;color:#DFE6E9;"></i>
+                                <p style="font-size:18px;margin-top:20px;">Начните общение</p>
                             </div>
                         </div>
-                        <div class="input-area" id="inputArea" style="display: none;">
+                        <div class="input-area" id="inputArea" style="display:none;">
                             <input type="file" id="fileInput" class="file-input" multiple>
                             <button class="attach-btn" id="attachBtn"><i class="fas fa-paperclip"></i></button>
                             <input type="text" class="message-input" id="messageInput" placeholder="Введите сообщение...">
@@ -1276,87 +940,53 @@
                         </div>
                     </div>
                 </div>
-                ${getSettingsModalHTML()}
-                ${getAddFriendModalHTML()}
-                ${isAdmin ? getAdminPanelHTML() : ''}
+                ${getModalsHTML(isAdmin)}
             `;
 
-            attachMainListeners();
+            attachMainListeners(isAdmin);
             loadChats();
         }
 
-        function escapeHtml(text) {
+        function escHtml(text) {
             const div = document.createElement('div');
             div.textContent = text || '';
             return div.innerHTML;
         }
 
-        function getSettingsModalHTML() {
+        function getModalsHTML(isAdmin) {
             return `
                 <div class="modal" id="settingsModal">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h2>Настройки профиля</h2>
+                            <h2>Настройки</h2>
                             <button class="modal-close" id="closeSettings">&times;</button>
                         </div>
-                        <div class="input-group">
-                            <label>Имя пользователя</label>
-                            <input type="text" id="settingsUsername" value="${escapeHtml(currentUser.username)}">
-                        </div>
-                        <div class="input-group">
-                            <label>Никнейм</label>
-                            <input type="text" id="settingsNickname" value="${escapeHtml(currentUser.nickname || '')}">
-                        </div>
-                        <div class="input-group">
-                            <label>Новый пароль (оставьте пустым если не нужно менять)</label>
-                            <input type="password" id="settingsPassword" placeholder="Новый пароль">
-                        </div>
-                        <div class="input-group">
-                            <label>Аватарка</label>
-                            <input type="file" id="settingsAvatar" accept="image/*">
-                            <img id="avatarPreview" src="${currentUser.avatar || 'https://via.placeholder.com/100'}" style="width: 100px; height: 100px; border-radius: 50%; margin-top: 10px;">
-                        </div>
-                        <div class="input-group">
-                            <label>Био</label>
-                            <textarea id="settingsBio" rows="3">${escapeHtml(currentUser.bio || '')}</textarea>
-                        </div>
-                        <button class="btn btn-primary" id="saveSettingsBtn">
-                            <i class="fas fa-save"></i> Сохранить
-                        </button>
+                        <div class="input-group"><label>Имя пользователя</label><input type="text" id="setUsername" value="${escHtml(currentUser.username)}"></div>
+                        <div class="input-group"><label>Никнейм</label><input type="text" id="setNickname" value="${escHtml(currentUser.nickname || '')}"></div>
+                        <div class="input-group"><label>Новый пароль</label><input type="password" id="setPassword" placeholder="Оставьте пустым"></div>
+                        <div class="input-group"><label>Аватарка</label><input type="file" id="setAvatar" accept="image/*"><img id="avatarPreview" src="${currentUser.avatar || 'https://via.placeholder.com/100'}" style="width:100px;height:100px;border-radius:50%;margin-top:10px;"></div>
+                        <div class="input-group"><label>Био</label><textarea id="setBio">${escHtml(currentUser.bio || '')}</textarea></div>
+                        <button class="btn btn-primary" id="saveSettings">Сохранить</button>
                     </div>
                 </div>
-            `;
-        }
-
-        function getAddFriendModalHTML() {
-            return `
                 <div class="modal" id="addFriendModal">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h2>Добавить друга</h2>
                             <button class="modal-close" id="closeAddFriend">&times;</button>
                         </div>
-                        <div class="input-group">
-                            <label>Введите имя пользователя (username)</label>
-                            <input type="text" id="friendUsernameInput" placeholder="Например: john_doe">
-                        </div>
-                        <div id="addFriendError" class="error-message" style="margin-bottom: 15px;"></div>
-                        <button class="btn btn-primary" id="addFriendByUsernameBtn">
-                            <i class="fas fa-user-plus"></i> Добавить в друзья
-                        </button>
-                        <div id="addFriendResult" style="margin-top: 15px;"></div>
+                        <div class="input-group"><label>Имя пользователя (username)</label><input type="text" id="friendUsername" placeholder="Введите username"></div>
+                        <div id="addFriendError" class="error-message"></div>
+                        <button class="btn btn-primary" id="addFriendSubmit">Добавить</button>
+                        <div id="addFriendResult" style="margin-top:15px;"></div>
                     </div>
                 </div>
-            `;
-        }
-
-        function getAdminPanelHTML() {
-            return `
-                <div class="modal" id="adminPanelModal">
+                ${isAdmin ? `
+                <div class="modal" id="adminModal">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h2><i class="fas fa-crown"></i> Админ-панель</h2>
-                            <button class="modal-close" id="closeAdminPanel">&times;</button>
+                            <button class="modal-close" id="closeAdmin">&times;</button>
                         </div>
                         <div class="admin-tabs">
                             <button class="admin-tab active" data-tab="users">Пользователи</button>
@@ -1364,615 +994,341 @@
                         </div>
                         <div id="adminUsersList"></div>
                     </div>
-                </div>
+                </div>` : ''}
             `;
         }
 
-        function attachMainListeners() {
-            console.log('Attaching main listeners');
-            
-            // Settings
-            document.getElementById('settingsBtn')?.addEventListener('click', () => {
-                document.getElementById('settingsModal').classList.add('active');
-            });
-            document.getElementById('closeSettings')?.addEventListener('click', () => {
-                document.getElementById('settingsModal').classList.remove('active');
-            });
-            document.getElementById('saveSettingsBtn')?.addEventListener('click', saveSettings);
-
-            // Avatar preview
-            document.getElementById('settingsAvatar')?.addEventListener('change', function(e) {
+        function attachMainListeners(isAdmin) {
+            document.getElementById('settingsBtn').onclick = () => document.getElementById('settingsModal').classList.add('active');
+            document.getElementById('closeSettings').onclick = () => document.getElementById('settingsModal').classList.remove('active');
+            document.getElementById('saveSettings').onclick = saveSettings;
+            document.getElementById('setAvatar').onchange = (e) => {
                 const file = e.target.files[0];
                 if (file) {
                     const reader = new FileReader();
-                    reader.onload = function(event) {
-                        document.getElementById('avatarPreview').src = event.target.result;
-                    };
+                    reader.onload = (ev) => document.getElementById('avatarPreview').src = ev.target.result;
                     reader.readAsDataURL(file);
                 }
-            });
+            };
 
-            // Add friend
-            document.getElementById('addFriendBtn')?.addEventListener('click', () => {
+            document.getElementById('addFriendBtn').onclick = () => {
                 document.getElementById('addFriendModal').classList.add('active');
-                const resultDiv = document.getElementById('addFriendResult');
-                const errorDiv = document.getElementById('addFriendError');
-                if (resultDiv) resultDiv.innerHTML = '';
-                if (errorDiv) {
-                    errorDiv.textContent = '';
-                    errorDiv.classList.remove('show');
-                }
-            });
-            document.getElementById('closeAddFriend')?.addEventListener('click', () => {
-                document.getElementById('addFriendModal').classList.remove('active');
-            });
-            document.getElementById('addFriendByUsernameBtn')?.addEventListener('click', addFriendByUsername);
+                document.getElementById('addFriendResult').innerHTML = '';
+                document.getElementById('addFriendError').classList.remove('show');
+            };
+            document.getElementById('closeAddFriend').onclick = () => document.getElementById('addFriendModal').classList.remove('active');
+            document.getElementById('addFriendSubmit').onclick = addFriend;
 
-            // Admin panel
-            const adminBtn = document.getElementById('adminPanelBtn');
-            if (adminBtn) {
-                adminBtn.addEventListener('click', () => {
-                    document.getElementById('adminPanelModal').classList.add('active');
+            if (isAdmin) {
+                document.getElementById('adminBtn').onclick = () => {
+                    document.getElementById('adminModal').classList.add('active');
                     loadAdminData('users');
+                };
+                document.getElementById('closeAdmin').onclick = () => document.getElementById('adminModal').classList.remove('active');
+                document.querySelectorAll('.admin-tab').forEach(tab => {
+                    tab.onclick = function() {
+                        document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
+                        this.classList.add('active');
+                        loadAdminData(this.dataset.tab);
+                    };
                 });
             }
-            document.getElementById('closeAdminPanel')?.addEventListener('click', () => {
-                document.getElementById('adminPanelModal').classList.remove('active');
-            });
 
-            // Admin tabs
-            document.querySelectorAll('.admin-tab').forEach(tab => {
-                tab.addEventListener('click', function() {
-                    document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
-                    this.classList.add('active');
-                    loadAdminData(this.dataset.tab);
-                });
-            });
-
-            // Messages
-            document.getElementById('sendBtn')?.addEventListener('click', sendMessage);
-            document.getElementById('messageInput')?.addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') sendMessage();
-            });
-            document.getElementById('attachBtn')?.addEventListener('click', function() {
-                document.getElementById('fileInput').click();
-            });
-            document.getElementById('fileInput')?.addEventListener('change', function(e) {
-                handleFileUpload(e.target.files);
-            });
-
-            // Logout
-            document.getElementById('logoutBtn')?.addEventListener('click', logout);
-
-            // Search
-            document.getElementById('searchUsers')?.addEventListener('input', function(e) {
-                const query = e.target.value.toLowerCase();
+            document.getElementById('sendBtn').onclick = sendMessage;
+            document.getElementById('messageInput').onkeypress = (e) => { if (e.key === 'Enter') sendMessage(); };
+            document.getElementById('attachBtn').onclick = () => document.getElementById('fileInput').click();
+            document.getElementById('fileInput').onchange = (e) => handleFileUpload(e.target.files);
+            document.getElementById('logoutBtn').onclick = () => auth.signOut();
+            document.getElementById('searchUsers').oninput = (e) => {
+                const q = e.target.value.toLowerCase();
                 document.querySelectorAll('.chat-item').forEach(item => {
                     const name = item.querySelector('.chat-name')?.textContent.toLowerCase() || '';
-                    item.style.display = name.includes(query) ? 'flex' : 'none';
+                    item.style.display = name.includes(q) ? 'flex' : 'none';
                 });
-            });
+            };
 
-            // Close modals on outside click
             document.querySelectorAll('.modal').forEach(modal => {
-                modal.addEventListener('click', function(e) {
-                    if (e.target === modal) {
-                        modal.classList.remove('active');
-                    }
-                });
+                modal.onclick = function(e) { if (e.target === modal) modal.classList.remove('active'); };
             });
         }
 
         function loadChats() {
             if (!currentUser?.uid) return;
-            
-            const chatsRef = db.collection('chats')
-                .where('participants', 'array-contains', currentUser.uid);
-
             if (chatsListener) chatsListener();
 
-            chatsListener = chatsRef.onSnapshot(async (snapshot) => {
-                const chatList = document.getElementById('chatList');
-                if (!chatList) return;
-                
-                chatList.innerHTML = '';
+            chatsListener = db.collection('chats')
+                .where('participants', 'array-contains', currentUser.uid)
+                .onSnapshot(async (snapshot) => {
+                    const chatList = document.getElementById('chatList');
+                    if (!chatList) return;
+                    chatList.innerHTML = '';
 
-                if (snapshot.empty) {
-                    chatList.innerHTML = `
-                        <div style="text-align: center; padding: 40px; color: rgba(255,255,255,0.5);">
-                            <i class="fas fa-comments" style="font-size: 48px;"></i>
-                            <p style="margin-top: 15px;">Нет диалогов</p>
-                            <p>Добавьте друзей, чтобы начать общение</p>
-                        </div>
-                    `;
-                    return;
-                }
-
-                const chats = [];
-                for (const docSnap of snapshot.docs) {
-                    const chatData = docSnap.data();
-                    const otherUserId = chatData.participants.find(id => id !== currentUser.uid);
-                    
-                    if (otherUserId) {
-                        const userDoc = await db.collection('users').doc(otherUserId).get();
-                        if (userDoc.exists) {
-                            const userData = userDoc.data();
-                            if (!userData.isBanned) {
-                                chats.push({
-                                    id: docSnap.id,
-                                    user: { ...userData, uid: otherUserId },
-                                    lastMessage: chatData.lastMessage || '',
-                                    timestamp: chatData.lastMessageTime || '',
-                                    unread: chatData.unread || 0
-                                });
-                            }
-                        }
+                    if (snapshot.empty) {
+                        chatList.innerHTML = '<div style="text-align:center;padding:40px;color:rgba(255,255,255,0.5);">Нет диалогов</div>';
+                        return;
                     }
-                }
 
-                chats.sort((a, b) => (b.timestamp || '').localeCompare(a.timestamp || ''));
+                    for (const doc of snapshot.docs) {
+                        const data = doc.data();
+                        const otherId = data.participants.find(id => id !== currentUser.uid);
+                        if (!otherId) continue;
+                        
+                        const userDoc = await db.collection('users').doc(otherId).get();
+                        if (!userDoc.exists) continue;
+                        const user = userDoc.data();
+                        if (user.isBanned) continue;
 
-                chats.forEach(chat => {
-                    const chatItem = document.createElement('div');
-                    chatItem.className = 'chat-item';
-                    if (currentChat && currentChat.id === chat.id) {
-                        chatItem.classList.add('active');
-                    }
-                    chatItem.innerHTML = `
-                        <img src="${chat.user.avatar || 'https://via.placeholder.com/45'}" class="chat-avatar" alt="Avatar">
-                        <div class="chat-info">
-                            <div class="chat-name">
-                                ${escapeHtml(chat.user.nickname || chat.user.username)}
-                                ${chat.user.isVerified ? '<i class="fas fa-check-circle chat-verified"></i>' : ''}
+                        const item = document.createElement('div');
+                        item.className = 'chat-item' + (currentChat?.id === doc.id ? ' active' : '');
+                        item.innerHTML = `
+                            <img src="${user.avatar || 'https://via.placeholder.com/45'}" class="chat-avatar">
+                            <div class="chat-info">
+                                <div class="chat-name">${escHtml(user.nickname || user.username)} ${user.isVerified ? '<i class="fas fa-check-circle" style="color:#00CEC9;"></i>' : ''}</div>
+                                <div class="chat-last-message">${escHtml(data.lastMessage || 'Нет сообщений')}</div>
                             </div>
-                            <div class="chat-last-message">${escapeHtml(chat.lastMessage || 'Нет сообщений')}</div>
-                        </div>
-                        ${chat.unread > 0 ? `<span class="unread-badge">${chat.unread}</span>` : ''}
-                    `;
-                    chatItem.addEventListener('click', () => openChat(chat));
-                    chatList.appendChild(chatItem);
+                            ${data.unread > 0 ? `<span class="unread-badge">${data.unread}</span>` : ''}
+                        `;
+                        item.onclick = () => openChat({ id: doc.id, user: { ...user, uid: otherId } });
+                        chatList.appendChild(item);
+                    }
                 });
-            });
         }
 
         function openChat(chat) {
             currentChat = chat;
-            
             document.getElementById('chatPartnerInfo').innerHTML = `
-                <div style="display: flex; align-items: center; gap: 15px;">
-                    <img src="${chat.user.avatar || 'https://via.placeholder.com/45'}" class="partner-avatar" alt="Avatar">
+                <div style="display:flex;align-items:center;gap:15px;">
+                    <img src="${chat.user.avatar || 'https://via.placeholder.com/45'}" class="partner-avatar">
                     <div class="partner-details">
-                        <h3>
-                            ${escapeHtml(chat.user.nickname || chat.user.username)}
-                            ${chat.user.isVerified ? '<i class="fas fa-check-circle" style="color: #00CEC9;"></i>' : ''}
-                        </h3>
-                        <p>@${escapeHtml(chat.user.username)}</p>
+                        <h3>${escHtml(chat.user.nickname || chat.user.username)} ${chat.user.isVerified ? '<i class="fas fa-check-circle" style="color:#00CEC9;"></i>' : ''}</h3>
+                        <p>@${escHtml(chat.user.username)}</p>
                     </div>
                 </div>
             `;
-
             document.getElementById('inputArea').style.display = 'flex';
             loadMessages(chat.id);
-            markChatAsRead(chat.id);
+            db.collection('chats').doc(chat.id).update({ unread: 0 });
         }
 
         function loadMessages(chatId) {
             if (messagesListener) messagesListener();
-
             messagesListener = db.collection('chats').doc(chatId).collection('messages')
                 .orderBy('timestamp')
                 .onSnapshot((snapshot) => {
-                    const messagesArea = document.getElementById('messagesArea');
-                    if (!messagesArea) return;
-                    
-                    messagesArea.innerHTML = '';
-
-                    snapshot.forEach((doc) => {
-                        const message = doc.data();
-                        const messageElement = document.createElement('div');
-                        messageElement.className = `message ${message.senderId === currentUser.uid ? 'sent' : 'received'}`;
-                        
-                        let content = '';
-                        if (message.type === 'image') {
-                            content = `<img src="${message.content}" class="message-image" alt="Image">`;
-                        } else if (message.type === 'file') {
-                            content = `
-                                <div class="message-file">
-                                    <i class="fas fa-file"></i>
-                                    <a href="${message.content}" target="_blank" style="color: inherit;">${escapeHtml(message.fileName || 'Файл')}</a>
-                                </div>`;
-                        } else {
-                            content = escapeHtml(message.content);
-                        }
-
-                        messageElement.innerHTML = `
-                            ${content}
-                            <div class="message-time">${formatTime(message.timestamp)}</div>
-                        `;
-                        messagesArea.appendChild(messageElement);
+                    const area = document.getElementById('messagesArea');
+                    if (!area) return;
+                    area.innerHTML = '';
+                    snapshot.forEach(doc => {
+                        const msg = doc.data();
+                        const el = document.createElement('div');
+                        el.className = 'message ' + (msg.senderId === currentUser.uid ? 'sent' : 'received');
+                        let content = msg.content;
+                        if (msg.type === 'image') content = `<img src="${msg.content}" class="message-image">`;
+                        else if (msg.type === 'file') content = `<div class="message-file"><i class="fas fa-file"></i> <a href="${msg.content}" target="_blank">${escHtml(msg.fileName || 'Файл')}</a></div>`;
+                        else content = escHtml(msg.content);
+                        el.innerHTML = `${content}<div class="message-time">${formatTime(msg.timestamp)}</div>`;
+                        area.appendChild(el);
                     });
-
-                    messagesArea.scrollTop = messagesArea.scrollHeight;
+                    area.scrollTop = area.scrollHeight;
                 });
         }
 
         async function sendMessage() {
             const input = document.getElementById('messageInput');
             const content = input?.value?.trim();
-            
             if (!content || !currentChat) return;
-
             try {
                 await db.collection('chats').doc(currentChat.id).collection('messages').add({
                     senderId: currentUser.uid,
-                    content: content,
-                    type: 'text',
+                    content, type: 'text',
                     timestamp: new Date().toISOString()
                 });
-
                 await db.collection('chats').doc(currentChat.id).update({
                     lastMessage: content,
                     lastMessageTime: new Date().toISOString()
                 });
-
                 input.value = '';
             } catch (error) {
-                console.error('Send message error:', error);
-                showToast('Ошибка отправки сообщения', 'error');
+                showToast('Ошибка отправки', 'error');
             }
         }
 
         async function handleFileUpload(files) {
             if (!files.length || !currentChat) return;
-
             for (const file of files) {
                 try {
-                    const storageRef = storage.ref(`chats/${currentChat.id}/${Date.now()}_${file.name}`);
-                    await storageRef.put(file);
-                    const downloadURL = await storageRef.getDownloadURL();
-                    const fileType = file.type.startsWith('image/') ? 'image' : 'file';
-
+                    const ref = storage.ref(`chats/${currentChat.id}/${Date.now()}_${file.name}`);
+                    await ref.put(file);
+                    const url = await ref.getDownloadURL();
+                    const type = file.type.startsWith('image/') ? 'image' : 'file';
                     await db.collection('chats').doc(currentChat.id).collection('messages').add({
                         senderId: currentUser.uid,
-                        content: downloadURL,
-                        type: fileType,
+                        content: url, type,
                         fileName: file.name,
                         timestamp: new Date().toISOString()
                     });
-
                     await db.collection('chats').doc(currentChat.id).update({
-                        lastMessage: fileType === 'image' ? '📷 Изображение' : `📎 ${file.name}`,
+                        lastMessage: type === 'image' ? '📷 Изображение' : `📎 ${file.name}`,
                         lastMessageTime: new Date().toISOString()
                     });
                 } catch (error) {
-                    console.error('File upload error:', error);
                     showToast('Ошибка загрузки файла', 'error');
                 }
             }
         }
 
-        async function markChatAsRead(chatId) {
-            try {
-                await db.collection('chats').doc(chatId).update({ unread: 0 });
-            } catch (error) {
-                console.error('Mark as read error:', error);
-            }
-        }
+        async function addFriend() {
+            const username = document.getElementById('friendUsername')?.value?.trim();
+            const errDiv = document.getElementById('addFriendError');
+            const resDiv = document.getElementById('addFriendResult');
+            errDiv.classList.remove('show');
+            resDiv.innerHTML = '';
 
-        async function addFriendByUsername() {
-            const username = document.getElementById('friendUsernameInput')?.value?.trim();
-            const resultDiv = document.getElementById('addFriendResult');
-            const errorDiv = document.getElementById('addFriendError');
-
-            if (errorDiv) {
-                errorDiv.textContent = '';
-                errorDiv.classList.remove('show');
-            }
-            if (resultDiv) resultDiv.innerHTML = '';
-
-            if (!username) {
-                if (errorDiv) {
-                    errorDiv.textContent = 'Введите имя пользователя';
-                    errorDiv.classList.add('show');
-                }
-                return;
-            }
-
-            if (username === currentUser.username) {
-                if (errorDiv) {
-                    errorDiv.textContent = 'Вы не можете добавить себя в друзья';
-                    errorDiv.classList.add('show');
-                }
-                return;
-            }
+            if (!username) { errDiv.textContent = 'Введите имя пользователя'; errDiv.classList.add('show'); return; }
+            if (username === currentUser.username) { errDiv.textContent = 'Нельзя добавить себя'; errDiv.classList.add('show'); return; }
 
             try {
-                const snapshot = await db.collection('users')
-                    .where('username', '==', username)
-                    .limit(1)
-                    .get();
-
-                if (snapshot.empty) {
-                    if (errorDiv) {
-                        errorDiv.textContent = 'Пользователь не найден';
-                        errorDiv.classList.add('show');
-                    }
-                    return;
-                }
-
-                const friendDoc = snapshot.docs[0];
-                const friendData = friendDoc.data();
-
-                if (friendData.isBanned) {
-                    if (errorDiv) {
-                        errorDiv.textContent = 'Этот пользователь заблокирован';
-                        errorDiv.classList.add('show');
-                    }
-                    return;
-                }
-
-                // Check if already friends
-                const existingChats = await db.collection('chats')
-                    .where('participants', 'array-contains', currentUser.uid)
-                    .get();
+                const snapshot = await db.collection('users').where('username', '==', username).limit(1).get();
+                if (snapshot.empty) { errDiv.textContent = 'Пользователь не найден'; errDiv.classList.add('show'); return; }
                 
-                let alreadyFriends = false;
-                existingChats.forEach((doc) => {
-                    if (doc.data().participants.includes(friendDoc.id)) {
-                        alreadyFriends = true;
-                    }
-                });
+                const friendDoc = snapshot.docs[0];
+                const friend = friendDoc.data();
+                if (friend.isBanned) { errDiv.textContent = 'Пользователь заблокирован'; errDiv.classList.add('show'); return; }
 
-                if (alreadyFriends) {
-                    if (resultDiv) {
-                        resultDiv.innerHTML = '<p style="color: #FECA57;">Этот пользователь уже у вас в друзьях</p>';
-                    }
-                    return;
-                }
+                const existing = await db.collection('chats').where('participants', 'array-contains', currentUser.uid).get();
+                let already = false;
+                existing.forEach(doc => { if (doc.data().participants.includes(friendDoc.id)) already = true; });
+                if (already) { resDiv.innerHTML = '<p style="color:#FECA57;">Уже в друзьях</p>'; return; }
 
-                // Create chat
                 await db.collection('chats').add({
                     participants: [currentUser.uid, friendDoc.id],
-                    lastMessage: '',
-                    lastMessageTime: new Date().toISOString(),
-                    unread: 0
+                    lastMessage: '', lastMessageTime: new Date().toISOString(), unread: 0
                 });
 
-                if (resultDiv) {
-                    resultDiv.innerHTML = `
-                        <div style="display: flex; align-items: center; gap: 10px; padding: 10px; background: #F8F9FA; border-radius: 10px;">
-                            <img src="${friendData.avatar || 'https://via.placeholder.com/40'}" style="width: 40px; height: 40px; border-radius: 50%;">
-                            <div>
-                                <strong>${escapeHtml(friendData.nickname || friendData.username)}</strong>
-                                <p style="color: #51CF66; margin: 0;">
-                                    <i class="fas fa-check-circle"></i> Добавлен в друзья!
-                                </p>
-                            </div>
-                        </div>
-                    `;
-                }
-
-                showToast('Пользователь добавлен в друзья!', 'success');
-
-                setTimeout(() => {
-                    document.getElementById('addFriendModal').classList.remove('active');
-                }, 1500);
-
+                resDiv.innerHTML = `<div style="display:flex;align-items:center;gap:10px;padding:10px;background:#F8F9FA;border-radius:10px;">
+                    <img src="${friend.avatar || 'https://via.placeholder.com/40'}" style="width:40px;height:40px;border-radius:50%;">
+                    <div><strong>${escHtml(friend.nickname || friend.username)}</strong>
+                    <p style="color:#51CF66;margin:0;"><i class="fas fa-check-circle"></i> Добавлен!</p></div>
+                </div>`;
+                showToast('Друг добавлен!', 'success');
+                setTimeout(() => document.getElementById('addFriendModal').classList.remove('active'), 1500);
             } catch (error) {
-                console.error('Add friend error:', error);
-                if (errorDiv) {
-                    errorDiv.textContent = 'Ошибка добавления друга';
-                    errorDiv.classList.add('show');
-                }
+                errDiv.textContent = 'Ошибка'; errDiv.classList.add('show');
             }
         }
 
-        async function loadAdminData(tab = 'users') {
-            const adminList = document.getElementById('adminUsersList');
-            if (!adminList) return;
-            
-            adminList.innerHTML = '';
-
-            try {
-                const snapshot = await db.collection('users').get();
-
-                let hasUsers = false;
-                snapshot.forEach((docSnap) => {
-                    const user = docSnap.data();
-                    const userId = docSnap.id;
-
-                    if (userId === currentUser.uid) return;
-
-                    if (tab === 'banned' && !user.isBanned) return;
-                    if (tab === 'users' && user.isBanned) return;
-
-                    hasUsers = true;
-
-                    const userElement = document.createElement('div');
-                    userElement.className = `user-list-item ${user.isBanned ? 'banned' : ''}`;
-                    userElement.innerHTML = `
-                        <div style="display: flex; align-items: center; gap: 15px;">
-                            <img src="${user.avatar || 'https://via.placeholder.com/40'}" style="width: 50px; height: 50px; border-radius: 50%;" alt="Avatar">
-                            <div>
-                                <div style="font-weight: 500; display: flex; align-items: center; gap: 5px;">
-                                    ${escapeHtml(user.nickname || user.username)}
-                                    ${user.isVerified ? '<i class="fas fa-check-circle" style="color: #00CEC9;"></i>' : ''}
-                                    ${user.isBanned ? '<span style="color: #FF6B6B; font-size: 12px;">(Заблокирован)</span>' : ''}
-                                </div>
-                                <div style="font-size: 12px; color: #636E72;">@${escapeHtml(user.username)}</div>
-                            </div>
+        async function loadAdminData(tab) {
+            const list = document.getElementById('adminUsersList');
+            if (!list) return;
+            list.innerHTML = '';
+            const snapshot = await db.collection('users').get();
+            snapshot.forEach(doc => {
+                const user = doc.data();
+                if (doc.id === currentUser.uid) return;
+                if (tab === 'banned' && !user.isBanned) return;
+                if (tab === 'users' && user.isBanned) return;
+                
+                const el = document.createElement('div');
+                el.className = 'user-list-item' + (user.isBanned ? ' banned' : '');
+                el.innerHTML = `
+                    <div style="display:flex;align-items:center;gap:15px;">
+                        <img src="${user.avatar || 'https://via.placeholder.com/40'}" style="width:50px;height:50px;border-radius:50%;">
+                        <div>
+                            <div style="font-weight:500;">${escHtml(user.nickname || user.username)} ${user.isVerified ? '<i class="fas fa-check-circle" style="color:#00CEC9;"></i>' : ''}</div>
+                            <div style="font-size:12px;color:#636E72;">@${escHtml(user.username)}</div>
                         </div>
-                        <div class="user-actions">
-                            ${!user.isBanned ? `
-                                <button class="mini-btn ${user.isVerified ? 'unverify' : 'verify'}" 
-                                    onclick="toggleVerify('${userId}', ${!user.isVerified})">
-                                    <i class="fas fa-${user.isVerified ? 'times' : 'check'}-circle"></i>
-                                    ${user.isVerified ? 'Снять' : 'Вериф.'}
-                                </button>
-                                <button class="mini-btn ban" onclick="banUser('${userId}')">
-                                    <i class="fas fa-ban"></i> Бан
-                                </button>
-                            ` : `
-                                <button class="mini-btn unban" onclick="unbanUser('${userId}')">
-                                    <i class="fas fa-undo"></i> Разбанить
-                                </button>
-                            `}
-                        </div>
-                    `;
-                    adminList.appendChild(userElement);
-                });
-
-                if (!hasUsers) {
-                    adminList.innerHTML = '<p style="text-align: center; color: #636E72; padding: 20px;">Нет пользователей</p>';
-                }
-            } catch (error) {
-                console.error('Load admin data error:', error);
-                adminList.innerHTML = '<p style="text-align: center; color: #FF6B6B;">Ошибка загрузки данных</p>';
-            }
+                    </div>
+                    <div class="user-actions">
+                        ${!user.isBanned ? `
+                            <button class="mini-btn ${user.isVerified ? 'unverify' : 'verify'}" onclick="toggleVerify('${doc.id}', ${!user.isVerified})">
+                                ${user.isVerified ? 'Снять' : 'Вериф.'}
+                            </button>
+                            <button class="mini-btn ban" onclick="banUser('${doc.id}')">Бан</button>
+                        ` : `
+                            <button class="mini-btn unban" onclick="unbanUser('${doc.id}')">Разбанить</button>
+                        `}
+                    </div>
+                `;
+                list.appendChild(el);
+            });
         }
 
         async function saveSettings() {
-            const username = document.getElementById('settingsUsername')?.value?.trim();
-            const nickname = document.getElementById('settingsNickname')?.value?.trim();
-            const password = document.getElementById('settingsPassword')?.value?.trim();
-            const bio = document.getElementById('settingsBio')?.value?.trim();
-            const avatarFile = document.getElementById('settingsAvatar')?.files[0];
+            const username = document.getElementById('setUsername')?.value?.trim();
+            const nickname = document.getElementById('setNickname')?.value?.trim();
+            const password = document.getElementById('setPassword')?.value?.trim();
+            const bio = document.getElementById('setBio')?.value?.trim();
+            const avatarFile = document.getElementById('setAvatar')?.files[0];
 
-            if (!username || !nickname) {
-                showToast('Заполните обязательные поля', 'error');
-                return;
-            }
+            if (!username || !nickname) { showToast('Заполните поля', 'error'); return; }
 
             try {
                 const updates = { username, nickname, bio };
-
                 if (username !== currentUser.username) {
-                    const existingUsers = await db.collection('users')
-                        .where('username', '==', username)
-                        .limit(1)
-                        .get();
-                    if (!existingUsers.empty) {
-                        showToast('Имя пользователя уже занято', 'error');
-                        return;
-                    }
+                    const snap = await db.collection('users').where('username', '==', username).limit(1).get();
+                    if (!snap.empty) { showToast('Имя занято', 'error'); return; }
                 }
-
-                if (password && password.length >= 6) {
-                    try {
-                        await auth.currentUser.updatePassword(password);
-                    } catch (passError) {
-                        console.error('Password update error:', passError);
-                        showToast('Для смены пароля требуется повторный вход', 'error');
-                    }
+                if (nickname !== currentUser.nickname) {
+                    const snap = await db.collection('users').where('nickname', '==', nickname).limit(1).get();
+                    if (!snap.empty) { showToast('Никнейм занят', 'error'); return; }
                 }
-
+                if (password && password.length >= 6) await auth.currentUser.updatePassword(password);
                 if (avatarFile) {
                     const reader = new FileReader();
-                    reader.onload = async function(event) {
-                        updates.avatar = event.target.result;
+                    reader.onload = async (e) => {
+                        updates.avatar = e.target.result;
                         await db.collection('users').doc(currentUser.uid).update(updates);
-                        await loadUserData(auth.currentUser);
-                        showToast('Настройки сохранены!', 'success');
+                        showToast('Сохранено!', 'success');
                         document.getElementById('settingsModal').classList.remove('active');
-                        showMainApp();
+                        location.reload();
                     };
                     reader.readAsDataURL(avatarFile);
                 } else {
                     await db.collection('users').doc(currentUser.uid).update(updates);
-                    await loadUserData(auth.currentUser);
-                    showToast('Настройки сохранены!', 'success');
+                    showToast('Сохранено!', 'success');
                     document.getElementById('settingsModal').classList.remove('active');
-                    showMainApp();
+                    location.reload();
                 }
             } catch (error) {
-                console.error('Save settings error:', error);
-                showToast('Ошибка сохранения настроек', 'error');
+                showToast('Ошибка сохранения', 'error');
             }
         }
 
-        async function logout() {
-            try {
-                if (messagesListener) messagesListener();
-                if (chatsListener) chatsListener();
-                currentUser = null;
-                currentChat = null;
-                await auth.signOut();
-            } catch (error) {
-                console.error('Logout error:', error);
-            }
-        }
-
-        function showToast(message, type = 'success') {
-            const existingToast = document.querySelector('.toast');
-            if (existingToast) existingToast.remove();
-
+        function showToast(msg, type = 'success') {
+            const existing = document.querySelector('.toast');
+            if (existing) existing.remove();
             const toast = document.createElement('div');
             toast.className = `toast ${type}`;
-            toast.innerHTML = `
-                <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
-                ${message}
-            `;
+            toast.innerHTML = `<i class="fas fa-${type === 'success' ? 'check' : 'exclamation'}-circle"></i> ${msg}`;
             document.body.appendChild(toast);
-            
-            setTimeout(() => {
-                toast.style.animation = 'slideInRight 0.3s ease reverse';
-                setTimeout(() => toast.remove(), 300);
-            }, 3000);
+            setTimeout(() => toast.remove(), 3000);
         }
 
-        function formatTime(timestamp) {
-            if (!timestamp) return '';
-            try {
-                const date = new Date(timestamp);
-                return date.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
-            } catch (e) {
-                return '';
-            }
+        function formatTime(ts) {
+            if (!ts) return '';
+            try { return new Date(ts).toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' }); }
+            catch (e) { return ''; }
         }
 
-        // Global admin functions
-        window.toggleVerify = async function(userId, verify) {
-            try {
-                await db.collection('users').doc(userId).update({
-                    isVerified: verify
-                });
-                showToast(verify ? 'Пользователь верифицирован' : 'Верификация снята', 'success');
-                loadAdminData(document.querySelector('.admin-tab.active')?.dataset?.tab || 'users');
-            } catch (error) {
-                console.error('Toggle verify error:', error);
-                showToast('Ошибка', 'error');
+        window.toggleVerify = async (uid, verify) => {
+            await db.collection('users').doc(uid).update({ isVerified: verify });
+            showToast(verify ? 'Верифицирован' : 'Снято', 'success');
+            loadAdminData(document.querySelector('.admin-tab.active')?.dataset?.tab || 'users');
+        };
+
+        window.banUser = async (uid) => {
+            if (confirm('Заблокировать пользователя?')) {
+                await db.collection('users').doc(uid).update({ isBanned: true });
+                showToast('Заблокирован', 'success');
+                loadAdminData('users');
             }
         };
 
-        window.banUser = async function(userId) {
-            if (confirm('Вы уверены, что хотите заблокировать этого пользователя?')) {
-                try {
-                    await db.collection('users').doc(userId).update({
-                        isBanned: true
-                    });
-                    showToast('Пользователь заблокирован', 'success');
-                    loadAdminData('users');
-                } catch (error) {
-                    console.error('Ban error:', error);
-                    showToast('Ошибка', 'error');
-                }
-            }
+        window.unbanUser = async (uid) => {
+            await db.collection('users').doc(uid).update({ isBanned: false });
+            showToast('Разблокирован', 'success');
+            loadAdminData('banned');
         };
-
-        window.unbanUser = async function(userId) {
-            try {
-                await db.collection('users').doc(userId).update({
-                    isBanned: false
-                });
-                showToast('Пользователь разблокирован', 'success');
-                loadAdminData('banned');
-            } catch (error) {
-                console.error('Unban error:', error);
-                showToast('Ошибка', 'error');
-            }
-        };
-
-        console.log('BordGram app initialized and ready');
     </script>
 </body>
 </html>
