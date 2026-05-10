@@ -681,6 +681,11 @@
         const db = firebase.firestore();
         const storage = firebase.storage();
 
+        // Админ email
+        const ADMIN_EMAIL = "dimakuleshov928@gmail.com";
+        const ADMIN_PASSWORD = "09823065890dD";
+        const ADMIN_USERNAME = "BordGram";
+
         let currentUser = null;
         let currentChat = null;
         let messagesListener = null;
@@ -698,6 +703,23 @@
                         return;
                     }
                     showApp();
+                } else {
+                    // Создаем документ пользователя
+                    const isAdmin = user.email === ADMIN_EMAIL;
+                    const userData = {
+                        email: user.email,
+                        username: isAdmin ? ADMIN_USERNAME : user.email.split('@')[0],
+                        nickname: isAdmin ? 'Admin' : user.email.split('@')[0],
+                        avatar: '',
+                        bio: '',
+                        isAdmin: isAdmin,
+                        isVerified: isAdmin,
+                        isBanned: false,
+                        createdAt: new Date().toISOString()
+                    };
+                    await db.collection('users').doc(user.uid).set(userData);
+                    currentUser = { ...userData, uid: user.uid };
+                    showApp();
                 }
             } else {
                 showLogin();
@@ -714,13 +736,13 @@
                             <p>Войдите в свой аккаунт</p>
                         </div>
                         <div class="input-group">
-                            <label>Никнейм</label>
-                            <input type="text" id="loginNickname" placeholder="Введите никнейм" autocomplete="username">
-                            <div class="error-message" id="loginNicknameError"></div>
+                            <label>Email</label>
+                            <input type="email" id="loginEmail" placeholder="Введите email" autocomplete="email" value="${ADMIN_EMAIL}">
+                            <div class="error-message" id="loginEmailError"></div>
                         </div>
                         <div class="input-group">
                             <label>Пароль</label>
-                            <input type="password" id="loginPassword" placeholder="Введите пароль" autocomplete="current-password">
+                            <input type="password" id="loginPassword" placeholder="Введите пароль" autocomplete="current-password" value="${ADMIN_PASSWORD}">
                             <div class="error-message" id="loginPasswordError"></div>
                         </div>
                         <div id="loginError" class="error-message" style="margin-bottom:15px;"></div>
@@ -734,7 +756,10 @@
 
             document.getElementById('loginBtn').onclick = login;
             document.getElementById('showRegister').onclick = () => showRegister();
-            document.onkeypress = (e) => { if (e.key === 'Enter') login(); };
+            
+            document.onkeypress = (e) => {
+                if (e.key === 'Enter') login();
+            };
         }
 
         function showRegister() {
@@ -781,40 +806,56 @@
 
         async function login() {
             clearErrors();
-            const nickname = document.getElementById('loginNickname')?.value?.trim();
+            const email = document.getElementById('loginEmail')?.value?.trim();
             const password = document.getElementById('loginPassword')?.value?.trim();
             let hasError = false;
 
-            if (!nickname) { showError('loginNicknameError', 'Введите никнейм'); hasError = true; }
+            if (!email) { showError('loginEmailError', 'Введите email'); hasError = true; }
             if (!password) { showError('loginPasswordError', 'Введите пароль'); hasError = true; }
             if (hasError) return;
 
+            // Проверка админа
+            if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
+                try {
+                    await auth.signInWithEmailAndPassword(email, password);
+                    return;
+                } catch (e) {
+                    if (e.code === 'auth/user-not-found') {
+                        // Создаем админа
+                        await registerAdmin();
+                        return;
+                    }
+                }
+            }
+
             try {
-                // Ищем пользователя по никнейму
-                const snapshot = await db.collection('users')
-                    .where('nickname', '==', nickname)
-                    .limit(1)
-                    .get();
-
-                if (snapshot.empty) {
-                    showError('loginError', 'Пользователь с таким никнеймом не найден');
-                    return;
-                }
-
-                const userData = snapshot.docs[0].data();
-                
-                if (userData.isBanned) {
-                    showError('loginError', 'Ваш аккаунт заблокирован');
-                    return;
-                }
-
-                // Входим через email
-                await auth.signInWithEmailAndPassword(userData.email, password);
+                await auth.signInWithEmailAndPassword(email, password);
             } catch (error) {
                 let msg = 'Ошибка входа';
                 if (error.code === 'auth/wrong-password') msg = 'Неверный пароль';
-                else if (error.code === 'auth/invalid-credential') msg = 'Неверные данные';
+                else if (error.code === 'auth/user-not-found') msg = 'Пользователь не найден';
+                else if (error.code === 'auth/invalid-email') msg = 'Неверный email';
+                else if (error.code === 'auth/invalid-credential') msg = 'Неверные учетные данные';
                 showError('loginError', msg);
+            }
+        }
+
+        async function registerAdmin() {
+            try {
+                const result = await auth.createUserWithEmailAndPassword(ADMIN_EMAIL, ADMIN_PASSWORD);
+                await db.collection('users').doc(result.user.uid).set({
+                    email: ADMIN_EMAIL,
+                    username: ADMIN_USERNAME,
+                    nickname: 'Admin',
+                    avatar: '',
+                    bio: 'Администратор BordGram',
+                    isAdmin: true,
+                    isVerified: true,
+                    isBanned: false,
+                    createdAt: new Date().toISOString()
+                });
+            } catch (error) {
+                console.error('Admin registration error:', error);
             }
         }
 
@@ -835,22 +876,14 @@
             if (hasError) return;
 
             try {
-                // Проверяем username
-                const usernameSnap = await db.collection('users').where('username', '==', username).limit(1).get();
-                if (!usernameSnap.empty) {
-                    const u = usernameSnap.docs[0].data();
-                    if (u.isBanned) {
+                const snapshot = await db.collection('users').where('username', '==', username).limit(1).get();
+                if (!snapshot.empty) {
+                    const existingUser = snapshot.docs[0].data();
+                    if (existingUser.isBanned) {
                         showError('registerError', 'Это имя пользователя заблокировано');
                     } else {
                         showError('regUsernameError', 'Имя пользователя уже занято');
                     }
-                    return;
-                }
-
-                // Проверяем nickname
-                const nicknameSnap = await db.collection('users').where('nickname', '==', nickname).limit(1).get();
-                if (!nicknameSnap.empty) {
-                    showError('regNicknameError', 'Этот никнейм уже занят');
                     return;
                 }
 
@@ -884,7 +917,7 @@
 
         function showApp() {
             if (!currentUser) return;
-            const isAdmin = currentUser.isAdmin || currentUser.username === 'BordGram';
+            const isAdmin = currentUser.isAdmin || currentUser.username === ADMIN_USERNAME;
             
             document.getElementById('app').innerHTML = `
                 <div class="app-container">
@@ -898,7 +931,7 @@
                                 </div>
                                 <div class="user-details">
                                     <h3>${escHtml(currentUser.nickname || currentUser.username)}</h3>
-                                    <p>@${escHtml(currentUser.username)}</p>
+                                    <p>@${escHtml(currentUser.username)} ${currentUser.isVerified ? '<i class="fas fa-check-circle" style="color:#00CEC9;"></i>' : ''}</p>
                                 </div>
                             </div>
                             <div class="search-bar">
@@ -923,7 +956,9 @@
                                 </div>
                             </div>
                             <div class="chat-actions">
-                                <button class="icon-btn" id="addFriendBtn"><i class="fas fa-user-plus"></i></button>
+                                <button class="icon-btn" id="addFriendBtn" title="Добавить друга по username">
+                                    <i class="fas fa-user-plus"></i>
+                                </button>
                             </div>
                         </div>
                         <div class="messages-area" id="messagesArea">
@@ -972,12 +1007,12 @@
                 <div class="modal" id="addFriendModal">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h2>Добавить друга</h2>
+                            <h2>Добавить друга по username</h2>
                             <button class="modal-close" id="closeAddFriend">&times;</button>
                         </div>
-                        <div class="input-group"><label>Имя пользователя (username)</label><input type="text" id="friendUsername" placeholder="Введите username"></div>
+                        <div class="input-group"><label>Введите username пользователя</label><input type="text" id="friendUsername" placeholder="Например: BordGram"></div>
                         <div id="addFriendError" class="error-message"></div>
-                        <button class="btn btn-primary" id="addFriendSubmit">Добавить</button>
+                        <button class="btn btn-primary" id="addFriendSubmit">Добавить в друзья</button>
                         <div id="addFriendResult" style="margin-top:15px;"></div>
                     </div>
                 </div>
@@ -1184,12 +1219,12 @@
             errDiv.classList.remove('show');
             resDiv.innerHTML = '';
 
-            if (!username) { errDiv.textContent = 'Введите имя пользователя'; errDiv.classList.add('show'); return; }
+            if (!username) { errDiv.textContent = 'Введите username'; errDiv.classList.add('show'); return; }
             if (username === currentUser.username) { errDiv.textContent = 'Нельзя добавить себя'; errDiv.classList.add('show'); return; }
 
             try {
                 const snapshot = await db.collection('users').where('username', '==', username).limit(1).get();
-                if (snapshot.empty) { errDiv.textContent = 'Пользователь не найден'; errDiv.classList.add('show'); return; }
+                if (snapshot.empty) { errDiv.textContent = 'Пользователь с таким username не найден'; errDiv.classList.add('show'); return; }
                 
                 const friendDoc = snapshot.docs[0];
                 const friend = friendDoc.data();
@@ -1198,7 +1233,7 @@
                 const existing = await db.collection('chats').where('participants', 'array-contains', currentUser.uid).get();
                 let already = false;
                 existing.forEach(doc => { if (doc.data().participants.includes(friendDoc.id)) already = true; });
-                if (already) { resDiv.innerHTML = '<p style="color:#FECA57;">Уже в друзьях</p>'; return; }
+                if (already) { resDiv.innerHTML = '<p style="color:#FECA57;">Этот пользователь уже у вас в друзьях</p>'; return; }
 
                 await db.collection('chats').add({
                     participants: [currentUser.uid, friendDoc.id],
@@ -1208,12 +1243,12 @@
                 resDiv.innerHTML = `<div style="display:flex;align-items:center;gap:10px;padding:10px;background:#F8F9FA;border-radius:10px;">
                     <img src="${friend.avatar || 'https://via.placeholder.com/40'}" style="width:40px;height:40px;border-radius:50%;">
                     <div><strong>${escHtml(friend.nickname || friend.username)}</strong>
-                    <p style="color:#51CF66;margin:0;"><i class="fas fa-check-circle"></i> Добавлен!</p></div>
+                    <p style="color:#51CF66;margin:0;"><i class="fas fa-check-circle"></i> Добавлен в друзья!</p></div>
                 </div>`;
-                showToast('Друг добавлен!', 'success');
+                showToast('Пользователь добавлен в друзья!', 'success');
                 setTimeout(() => document.getElementById('addFriendModal').classList.remove('active'), 1500);
             } catch (error) {
-                errDiv.textContent = 'Ошибка'; errDiv.classList.add('show');
+                errDiv.textContent = 'Ошибка добавления'; errDiv.classList.add('show');
             }
         }
 
@@ -1267,10 +1302,6 @@
                 if (username !== currentUser.username) {
                     const snap = await db.collection('users').where('username', '==', username).limit(1).get();
                     if (!snap.empty) { showToast('Имя занято', 'error'); return; }
-                }
-                if (nickname !== currentUser.nickname) {
-                    const snap = await db.collection('users').where('nickname', '==', nickname).limit(1).get();
-                    if (!snap.empty) { showToast('Никнейм занят', 'error'); return; }
                 }
                 if (password && password.length >= 6) await auth.currentUser.updatePassword(password);
                 if (avatarFile) {
